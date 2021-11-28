@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+//shani
 static char current_user[25];
 
 typedef struct manager

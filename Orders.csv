@@ -1,0 +1,4 @@
+Number of the order,Status,Customer,Amount,Total,Products
+1,V,ZACCH,2,800,BANANA x 5 => 12;,CHOKO x 7 => 12;
+2,X,SHANI,1,345,CAF x 9 => 12;
+3,-,ILAN,1,63,LAIT x 10 => 12;
