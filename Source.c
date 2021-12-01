@@ -111,6 +111,7 @@ int struct_cmp_by_descending_order(const void* a, const void* b);
 void print_struct_array(struct product* array, int len);
 void sort_A(char category[5]);
 void sort_D(char category[5]);
+int some_category_costumer(int choice);
 
 
 int main()
@@ -2103,7 +2104,7 @@ void customer_menu()
 	}
 	else if (atoi(choice) > 0 || atoi(choice) <= num_category)
 	{
-		num_product = view_specific_category(atoi(choice));
+		num_product = some_category_costumer(atoi(choice));
 		printf("Select the product you want to add to your basket :\n\tIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
 		scanf(" %s", choice2);
 		if (strcmp(choice2, "A") == 0 || strcmp(choice2, "a") == 0)
@@ -2658,4 +2659,45 @@ void sort_D(char category[5])
 		printf("\nThe product has been added successfully\n");
 	}
 	return;
+}
+
+int some_category_costumer(int choice)
+{
+	int serial_num = 0;
+	char c = ' ';
+	int categories_num;
+	int counter = 0;
+	product some_pro;
+	FILE* fic = fopen("CategoriesAndProducts.csv", "r+");
+	if (fic == NULL)
+		exit(1);
+
+	fseek(fic, 19, SEEK_SET);
+	if (choice != 1)
+	{
+		while (!feof(fic))
+		{
+			c = fgetc(fic);
+			if (c == '\n')
+			{
+				++counter;
+			}
+			if (counter == choice)
+				break;
+		}
+	}
+	while (c != ',')
+		c = fgetc(fic);
+	//printf("\n    PRODUCT:    PRICE:\n\n");
+	while (!feof(fic) && c != '\n')
+	{
+		++serial_num;
+		fscanf(fic, " %[^;];%[^;];%[^;]", some_pro.product_name, some_pro.price, some_pro.amount_of_product);
+		printf("%d - %s\nPRICE: %s ILS\n", serial_num, some_pro.product_name, some_pro.price);
+		printf("\n");
+		c = fgetc(fic);
+		c = fgetc(fic);
+	}
+	fclose(fic);
+	return serial_num;
 }
