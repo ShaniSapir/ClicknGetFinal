@@ -2574,7 +2574,7 @@ void sort_A(char category[5])
 		scanf(" %s", quantity);
 		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 < atoi(test->amount_of_product))
 		{
-			printf("Your input is not valid, Try again.\n");
+			printf("Your input is not valid, Try again.\n"); 
 			scanf(" %s", quantity);
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
