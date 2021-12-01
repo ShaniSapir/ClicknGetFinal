@@ -2569,7 +2569,7 @@ void sort_A(char category[5])
 	printf("Select the product you want to add to your basket :\n");
 	scanf(" %s", choice2);
 	if (atoi(choice2) > 0 || atoi(choice2) <= atoi(category))
-	{ ///////////////////////////////////////////////////////check stock//////////////////////////////////////
+	{ ///////////////////////////////////////////////////////check stock
 		printf("What is the quantity you want? \n");
 		scanf(" %s", quantity);
 		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 < atoi(test->amount_of_product))
