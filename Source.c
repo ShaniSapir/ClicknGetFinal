@@ -2106,12 +2106,12 @@ void customer_menu()
 		num_product = view_specific_category(atoi(choice));
 		printf("Select the product you want to add to your basket :\n\tIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
 		scanf(" %s", choice2);
-		if (strcmp(choice, "A") == 0 || strcmp(choice, "a") == 0)
+		if (strcmp(choice2, "A") == 0 || strcmp(choice2, "a") == 0)
 		{
 			sort_A(choice);
 			return customer_menu();
 		}
-		else if (strcmp(choice, "D") == 0 || strcmp(choice, "d") == 0)
+		else if (strcmp(choice2, "D") == 0 || strcmp(choice2, "d") == 0)
 		{
 			sort_D(choice);
 			return customer_menu();
@@ -2510,8 +2510,9 @@ int struct_cmp_by_descending_order(const void* a, const void* b)
 void print_struct_array(struct product* array, int len)
 {
 	int counter = 1;
+	printf("\n");
 	for (int i = 0; i < len; i++)
-		printf("%d - %s\nPRICE: %s\n", counter++, array[i].product_name, array[i].price);
+		printf("%d - %s\nPRICE: %s\nQUANTITY: %s\n\n", counter, array[i].product_name, array[i].price, array[i].amount_of_product);
 }
 
 void sort_A(char category[5])
