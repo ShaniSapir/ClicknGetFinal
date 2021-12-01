@@ -126,14 +126,15 @@ int main()
 void menu()
 {
 	char account[2], connection[2];
-	printf("\t\t\t1-Manager\n\t\t\t2-Customer\n");
+	printf("What Kind Of User You Are?\t1 - Manager\t2 - Customer\n");
+	//printf("\t1 - Manager\t2 - Customer\n");
 	scanf(" %s", account);
 	while (atoi(account) != 1 && atoi(account) != 2)
 	{
 		printf("Bad choice. Try again\n");
 		scanf(" %s", account);
 	}
-	printf("\t\t\t1-Log In\n\t\t\t2-Register\n");
+	printf("\nAlready Have An Account? - Press 1 to Log In.\nNew? Join Us! - Press 2 to Register.\n");
 	scanf(" %s", connection);
 	while (atoi(connection) != 1 && atoi(connection) != 2)
 	{
@@ -758,7 +759,7 @@ int print_all_category()
 	fseek(fic, 18, SEEK_SET);
 	char category[25];
 	int num = 0;
-	printf("CATEGORIES: \n");
+	printf("CATEGORIES:\n");
 	char c = fgetc(fic);
 	while (!feof(fic))
 	{
@@ -2080,9 +2081,10 @@ void customer_menu()
 	char d;
 	char quantity[5];
 	char product[25];
-	printf("\n");
+	printf("\nSelect Category To Shop From:\n========================\n");
 	num_category = print_all_category();
-	printf("You can do the folowing:\nSelect category to shop from.\nSearch for specific product - Enter S.\nView your profile and update your information - Enter 0.\nView your basket - Enter V.\n");
+	printf("========================\n\n");
+	printf("To Search For Specific Product - Enter S.\n\nTo View Your Profile And Update Your Information - Enter 0.\n\nTo View Your Basket - Enter V.\n\n");
 	scanf(" %s", choice);
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
