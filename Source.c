@@ -103,8 +103,8 @@ void menu_view_basket();
 void search_product_customer(char productT[25]);
 void print_previous_order_costumer();
 int print_customer_basket();
-void edit_customer_basket(int choice);
-void payment();
+void edit_customer_basket(int choice, int numofproduct);
+void payment(int numofproduct);
 void add_product_to_basket_from_menu(char choicecat[5], char choicepro[5], char quantity[5]);
 int struct_cmp_by_increasing_order(const void* a, const void* b);
 int struct_cmp_by_descending_order(const void* a, const void* b);
@@ -2260,26 +2260,42 @@ void menu_view_basket()
 	num_of_product = print_customer_basket();
 	char choice[2];
 	char product_choice[5];
+	int check=0;
 	printf("1 - To edit your basket.\nB - To buy your basket.\nR - To return to the menu\nWhat your choice? ");
 	scanf(" %s", choice);
-	while (atoi(choice) != 1 || strcmp(choice, "B") == 0 || strcmp(choice, "b") == 0 || strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)     ///// or &&
+
+	while (check != 1)
 	{
+		if (atoi(choice) == 1 || strcmp(choice, "B") == 0 || strcmp(choice, "b") == 0 || strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
+			break;
 		printf("The input is invalid, Try again\n");
 		scanf(" %s", choice);
 	}
 	if (atoi(choice) == 1)
 	{
+		if (num_of_product == 0)
+		{
+			printf("\nYou can't update your basket because it is empty.\n");
+			return menu_view_basket();
+		}
 		printf("Select the number of the product you want to update: \n");
 		scanf(" %s", product_choice);
 		while (check_number(product_choice) == 1 || atoi(product_choice) > num_of_product || atoi(product_choice) < 1)
 		{
 			printf("The input is invalid, Try again\n");
-			scanf(" %s", choice);
+			scanf(" %s", product_choice);
 		}
-		return edit_customer_basket(atoi(choice));
+		return edit_customer_basket(atoi(product_choice),num_of_product);
 	}
 	else if (strcmp(choice, "B") == 0 || strcmp(choice, "b") == 0)
-		return payment();
+	{
+		if (num_of_product == 0)
+		{
+			printf("\nYou can't buy your basket because it is empty.\n");
+			return menu_view_basket();
+		}
+		return payment(num_of_product);
+	}
 	else if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
 		return customer_menu();
 }
@@ -2297,16 +2313,26 @@ int print_customer_basket()
 	int num_product = 0;
 	int sum = 0;
 	char c = ' ';
-	fseek(fic, 2, SEEK_SET);
+	fseek(fic, 3, SEEK_SET);
 	while (!feof(fic))
 	{
 		++num_product;
 		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);                           // maybe \n?
+		if (check_number(quantity) == 1)
+		{
+			printf("\nThey are no product in your basket.\n\n", sum);
+			break;
+		}
 		sum += (atoi(price) * atoi(quantity));
-		printf("%d - Product: %s\tQuantity: %s\tPrice: %s\n", num_product, product_name, quantity, price);
+		printf("%d - Product: %s\tQuantity: %s\tPrice: %s ILS\n\n", num_product, product_name, quantity, price);
 		c = fgetc(fic);
 		if (c == EOF)
 			break;
+	}
+	if (check_number(quantity) == 1)
+	{
+		fclose(fic);
+		return 0;
 	}
 	printf("Total of basket: %d\n", sum);
 	fclose(fic);
@@ -2314,7 +2340,7 @@ int print_customer_basket()
 }
 
 //////////////////////////////////// סיימנו/////////////////////////////
-void edit_customer_basket(int choice)
+void edit_customer_basket(int choice,int numofproduct)
 {
 	FILE* fic = fopen("Basket.csv", "r+");
 	if (fic == NULL)
@@ -2334,29 +2360,39 @@ void edit_customer_basket(int choice)
 	fputc(c, fic2);
 	while (counter != choice)
 	{
-		fscanf(fic, "%[^,],%[^,],%[^;];\n", data.product_name, data.amount_of_product, data.price);
-		fprintf(fic2, "%s,%s,%s;\n", data.product_name, data.amount_of_product, data.price);
-		counter++;
+		if (counter == numofproduct - 1)
+		{
+			fscanf(fic, "%[^,],%[^,],%[^;];", data.product_name, data.amount_of_product, data.price);
+			fprintf(fic2, "%s,%s,%s;", data.product_name, data.amount_of_product, data.price);
+			counter++;
+		}
+		else
+		{
+			fscanf(fic, "%[^,],%[^,],%[^;];\n", data.product_name, data.amount_of_product, data.price);
+			fprintf(fic2, "%s,%s,%s;\n", data.product_name, data.amount_of_product, data.price);
+			counter++;
+		}
 	} ///////////////////////////////////////////////////////check stock//////////////////////////////////////
-	printf("What is the new quantity you want to update? Press x and then the new amount.\nIf you want to delete this product press x and then 0.\n");
-	scanf(" %c", &d);
+	printf("What is the new quantity you want to update? If you want to delete this product press 0.\n");
 	scanf(" %s", quantity);
-	while (d != 'x' || d != 'X' || check_number(quantity) == 1)
+	while (check_number(quantity) == 1)
 	{
 		printf("Your input is not valid, Try again.\n");
-		scanf(" %c", &d);
 		scanf(" %s", quantity);
 	}
 	if (atoi(quantity) == 0)
 	{
-		scanf(fic, "%[^,],%[^,],%[^;];\n", data.product_name, data.amount_of_product, data.price);
+		fscanf(fic, "%[^,],%[^,],%[^;];", data.product_name, data.amount_of_product, data.price);
+		c = fgetc(fic);
+		if(c=='\n')
+			c = fgetc(fic);
 	}
 	else
 	{
-		fscanf(fic, "%[^,],%[^,],%[^;];\n", data.product_name, data.amount_of_product, data.price);
-		fprintf(fic2, "%s,%s,%s;\n", data.product_name, data.amount_of_product, data.price);
+		fscanf(fic, "%[^,],%[^,],%[^;];", data.product_name, data.amount_of_product, data.price);
+		fprintf(fic2, "%s,%s,%s;", data.product_name, quantity, data.price);
+		c = fgetc(fic);
 	}
-	c = fgetc(fic);
 	while (c != EOF)
 	{
 		fputc(c, fic2);
@@ -2375,16 +2411,16 @@ void edit_customer_basket(int choice)
 	}
 	fclose(fic2);
 	fclose(fic);
-	printf("Quantity successfully updated\n");
+	printf("Quantity successfully updated\n\n\n");
 	return menu_view_basket();
 }
 
-void payment()
+void payment(int numofproduct)
 {
-	char credit_card1[5];
-	char credit_card2[5];
-	char credit_card3[5];
-	char credit_card4[5];
+	char credit_card1[4];
+	char credit_card2[4];
+	char credit_card3[4];
+	char credit_card4[4];
 	char month[3];
 	char year[5];
 	char id[10];
@@ -2413,12 +2449,12 @@ void payment()
 		printf("The month you entered is not valid, Try again.\n");
 		scanf(" %s", month);
 	}
-	printf("Enter year: \n");
+	printf("Enter year (more than 2021): \n");
 	scanf(" %s", year);
-	while (check_number(year) == 1 || atoi(month) < 2021)
+	while (check_number(year) == 1 || atoi(year) <= 2021)
 	{
 		printf("The year you entered is not valid, Try again.\n");
-		scanf(" %s", month);
+		scanf(" %s", year);
 	}
 	printf("Enter ID (9): \n");
 	scanf(" %s", id);
@@ -2429,7 +2465,7 @@ void payment()
 	}
 	printf("Enter CVV (3 digits in the back of the card): \n");
 	scanf(" %s", cvv);
-	while (check_number(cvv) == 1 || atoi(cvv) != 0)
+	while (check_number(cvv) == 1 || atoi(cvv) == 0)
 	{
 		printf("Your CVV is not correct, try again.\n");
 		scanf(" %s", cvv);
@@ -2452,6 +2488,51 @@ void payment()
 	}
 
 	printf("Your order is on the way to you, Come shop with us again!\n");
+
+	FILE* fic = fopen("Orders.csv", "r+");
+	FILE* fic2 = fopen("Basket.csv", "r+");
+	if (fic == NULL)
+		exit(1);
+	if (fic2 == NULL)
+		exit(1);
+	int counter = 0,sum=0;
+	char product_name[25];
+	char quantity[5];
+	char price[10];
+	char c = ' ';
+	while (c!=EOF)
+	{
+		c = fgetc(fic);
+		if (c == '\n')
+			counter++;
+	}
+	fprintf(fic, "\n%d,-,%s,%d,", counter, current_user,numofproduct);
+
+	fseek(fic2, 3, SEEK_SET);
+	while (!feof(fic2))
+	{
+		fscanf(fic2, "%[^,],%[^,],%[^;];", product_name, quantity, price);
+		sum += (atoi(price) * atoi(quantity));
+		c = fgetc(fic2);
+		if (c == EOF)
+			break;
+	}
+	fprintf(fic, "%d,", sum);
+	fseek(fic2, 3, SEEK_SET);
+	while (!feof(fic2))
+	{
+		fscanf(fic2, "%[^,],%[^,],%[^;];", product_name, quantity, price);
+		fprintf(fic, "%s x %s => %s;", product_name, quantity, price);
+		c = fgetc(fic2);
+		if (c == ',')
+			fputc(c, fic);
+	}
+	fclose(fic);
+	fclose(fic2);
+
+	fic2 = fopen("Basket.csv", "w+");
+	fputc(' ', fic2);
+	fclose(fic2);
 	return customer_menu();
 }
 
@@ -2515,7 +2596,7 @@ void print_struct_array(struct product* array, int len)
 	int counter = 1;
 	printf("\n");
 	for (int i = 0; i < len; i++)
-		printf("%d - %s\nPRICE: %s\nQUANTITY: %s\n\n", counter, array[i].product_name, array[i].price, array[i].amount_of_product);
+		printf("%d - %s\nPRICE: %s ILS\n\n", counter++, array[i].product_name, array[i].price);
 }
 
 void sort_A(char category[5])
@@ -2575,7 +2656,7 @@ void sort_A(char category[5])
 	{ ///////////////////////////////////////////////////////check stock
 		printf("What is the quantity you want? \n");
 		scanf(" %s", quantity);
-		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 < atoi(test->amount_of_product))
+		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 > atoi(test->amount_of_product))
 		{
 			printf("Your input is not valid, Try again.\n"); 
 			scanf(" %s", quantity);
@@ -2644,13 +2725,11 @@ void sort_D(char category[5])
 	scanf(" %s", choice2);
 	if (atoi(choice2) > 0 || atoi(choice2) <= atoi(category))
 	{ ///////////////////////////////////////////////////////check stock//////////////////////////////////////
-		printf("What is the quantity you want? Press x and then the new amount.\n");
-		scanf(" %c", &d);
+		printf("What is the quantity you want? \n");
 		scanf(" %s", quantity);
-		while (d != 'x' || d != 'X' || check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 < atoi(test->amount_of_product))
+		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 > atoi(test->amount_of_product))
 		{
 			printf("Your input is not valid, Try again.\n");
-			scanf(" %c", &d);
 			scanf(" %s", quantity);
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
