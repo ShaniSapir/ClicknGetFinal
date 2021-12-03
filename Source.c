@@ -112,6 +112,7 @@ void print_struct_array(struct product* array, int len);
 void sort_A(char category[5]);
 void sort_D(char category[5]);
 int some_category_costumer(int choice);
+void stock_update();
 
 
 int main()
@@ -2320,7 +2321,7 @@ int print_customer_basket()
 		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);                           // maybe \n?
 		if (check_number(quantity) == 1)
 		{
-			printf("\nThey are no product in your basket.\n\n", sum);
+			printf("\nThey are no product in your basket.\n\n");
 			break;
 		}
 		sum += (atoi(price) * atoi(quantity));
@@ -2663,7 +2664,7 @@ void sort_A(char category[5])
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
 		fseek(fic2, 0, SEEK_END);
-		fprintf(fic2, "\n%s;%s;%s,", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
+		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
 		fclose(fic2);
 		fclose(fic);
 		printf("\nThe product has been added successfully\n");
@@ -2734,7 +2735,7 @@ void sort_D(char category[5])
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
 		fseek(fic2, 0, SEEK_END);
-		fprintf(fic2, "\n%s;%s;%s,", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
+		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
 		fclose(fic2);
 		fclose(fic);
 		printf("\nThe product has been added successfully\n");
@@ -2781,4 +2782,54 @@ int some_category_costumer(int choice)
 	}
 	fclose(fic);
 	return serial_num;
+}
+
+void stock_update()
+{
+	FILE* fic = fopen("Basket.csv", "r+");
+	if (fic == NULL)
+		exit(1);
+	FILE* fic2 = fopen("CategoriesAndProducts.csv", "r+");
+	if (fic2 == NULL)
+		exit(1);
+	FILE* fic3 = fopen("CategoriesAndProductsTEST.csv", "r+");
+	char product_name[25];
+	char quantity[5];
+	char price[10];
+	product data;
+	int num_product = 0;
+	int sum = 0;
+	char c = ' ';
+	fseek(fic, 3, SEEK_SET);
+	while (!feof(fic))
+	{
+		++num_product;
+		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);
+		c = fgetc(fic);
+		if (c == EOF)
+			break;
+	}
+	fseek(fic, 3, SEEK_SET);
+	c = fgetc(fic2);
+	while (c!='\n')
+	{
+		fputc(c, fic3);
+		c = fgetc(fic2);
+	}
+	fputc(c, fic3);
+
+
+	fseek(fic2, 18, SEEK_SET);
+	for (int i = 0; i < num_product; i++)
+	{
+		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);
+		while (!feof(fic2))
+		{
+			while (c!=',')
+			{
+				c = fgetc(fic2);
+
+			}
+		}
+	}
 }

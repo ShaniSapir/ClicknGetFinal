@@ -5,3 +5,4 @@ Number of the order,Status,Customer,Amount,Total,Products
 3,-,AZERTY,2,40,MILK x 1 => 30;BUN x 2 => 5;
 4,-,AZERTY,4,338,MILK x 1 => 30;SHOCKO x 2 => 100;BOREKAS x 1 => 98;BUN x 2 => 5;
 5,-,AZERTY,1,30,MILK x 1 => 30;
+6,-,AZERTY,2,1588,SHOCKO x 10 => 100;BOREKAS x 6 => 98;
