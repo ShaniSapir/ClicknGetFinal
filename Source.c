@@ -113,6 +113,7 @@ void sort_A(char category[5]);
 void sort_D(char category[5]);
 int some_category_costumer(int choice);
 void stock_update();
+void update_in_stock(char product_name[25], char quantity[5], int i);
 
 
 int main()
@@ -2230,7 +2231,7 @@ void print_previous_order_costumer()
 	while (!feof(fic))
 	{
 		c = ' ';
-		fscanf(fic, "%[^,],%[^,],%[^,],%d,%d,", nbr_orders, status, current_user, &amount, &total);
+		fscanf(fic, "%[^,],%[^,],%[^,],%d,%d,", nbr_orders, status, customer, &amount, &total);
 		if (strcmp(current_user, customer) == 0)
 		{
 			c = ' ';
@@ -2242,7 +2243,6 @@ void print_previous_order_costumer()
 				c = fgetc(fic);
 			}
 			printf("\n");
-			c = 'X';
 			counter = -1;
 		}
 		while (c != '\n' && c != EOF)
@@ -2490,6 +2490,8 @@ void payment(int numofproduct)
 
 	printf("Your order is on the way to you, Come shop with us again!\n");
 
+	stock_update();
+
 	FILE* fic = fopen("Orders.csv", "r+");
 	FILE* fic2 = fopen("Basket.csv", "r+");
 	if (fic == NULL)
@@ -2525,8 +2527,8 @@ void payment(int numofproduct)
 		fscanf(fic2, "%[^,],%[^,],%[^;];", product_name, quantity, price);
 		fprintf(fic, "%s x %s => %s;", product_name, quantity, price);
 		c = fgetc(fic2);
-		if (c == ',')
-			fputc(c, fic);
+		if (c == '\n')
+			fputc(',', fic);
 	}
 	fclose(fic);
 	fclose(fic2);
@@ -2561,9 +2563,9 @@ void add_product_to_basket_from_menu(char choicecat[5], char choicepro[5], char 
 			counter2++;
 	}
 	fscanf(fic, "%[^;];%[^;];%[^;];", data.product_name, data.price, data.amount_of_product);
-	if (atoi(quantity) > data.amount_of_product)
+	if (atoi(quantity) > atoi(data.amount_of_product))
 	{
-		printf("Your input is not valid, Try again.\n");
+		printf("Your input is not valid, remain %s of %s in the stock. Try again.\n", data.amount_of_product,data.product_name);
 		return;
 	}
 	else
@@ -2789,16 +2791,10 @@ void stock_update()
 	FILE* fic = fopen("Basket.csv", "r+");
 	if (fic == NULL)
 		exit(1);
-	FILE* fic2 = fopen("CategoriesAndProducts.csv", "r+");
-	if (fic2 == NULL)
-		exit(1);
-	FILE* fic3 = fopen("CategoriesAndProductsTEST.csv", "r+");
 	char product_name[25];
 	char quantity[5];
 	char price[10];
-	product data;
 	int num_product = 0;
-	int sum = 0;
 	char c = ' ';
 	fseek(fic, 3, SEEK_SET);
 	while (!feof(fic))
@@ -2810,26 +2806,67 @@ void stock_update()
 			break;
 	}
 	fseek(fic, 3, SEEK_SET);
-	c = fgetc(fic2);
-	while (c!='\n')
-	{
-		fputc(c, fic3);
-		c = fgetc(fic2);
-	}
-	fputc(c, fic3);
-
-
-	fseek(fic2, 18, SEEK_SET);
 	for (int i = 0; i < num_product; i++)
 	{
 		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);
-		while (!feof(fic2))
-		{
-			while (c!=',')
-			{
-				c = fgetc(fic2);
+		c = fgetc(fic);
+		update_in_stock(product_name, quantity,i);
+	}
+}
 
+void update_in_stock(char product_name[25],char quantity[5],int i)
+{
+	FILE* fic = fopen("CategoriesAndProducts.csv", "r+");
+	FILE* fic2 = fopen("CategoriesAndProductsTEST.csv", "w+");
+	fseek(fic, 0, SEEK_SET);
+	char c = fgetc(fic);
+	int test;
+	product data;
+	while (c != '\n')
+	{
+		putc(c, fic2);
+		c = fgetc(fic);
+	}
+	while (!feof(fic))
+	{
+		while (c != ',' && c != EOF)
+		{
+			putc(c, fic2);
+			c = fgetc(fic);
+		}
+		while (c != '\n' && c != EOF)
+		{
+			putc(c, fic2);
+			fscanf(fic, "%[^;];%[^;];%[^;];", data.product_name, data.price, data.amount_of_product);
+			if (strcmp(data.product_name, product_name) == 0)
+			{
+				test = atoi(data.amount_of_product) - atoi(quantity);
+				if(test>=0)
+					fprintf(fic2, "%s;%s;%d;", data.product_name, data.price, test);
+				else
+				{
+					printf("\nWe are sorry, due to an error we will only be able to deliver %s %s to you instead of %s (from the product number %d).\n\n", data.amount_of_product, data.product_name, quantity,i+1);
+					fprintf(fic2, "%s;%s;%d;", data.product_name, data.price, 0);
+				}
 			}
+			else
+				fprintf(fic2, "%s;%s;%s;", data.product_name, data.price, data.amount_of_product);
+
+			c = fgetc(fic);
 		}
 	}
+	fclose(fic);
+	fic = fopen("CategoriesAndProducts.csv", "w");
+	fclose(fic);
+	fic = fopen("CategoriesAndProducts.csv", "r+");
+	fseek(fic2, 0, SEEK_SET);
+	c = fgetc(fic2);
+	while (!feof(fic2))
+	{
+		fputc(c, fic);
+		c = fgetc(fic2);
+	}
+	fclose(fic2);
+	fclose(fic);
+	return;
 }
