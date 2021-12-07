@@ -28,8 +28,8 @@ typedef struct customer
 	char password[25];
 }customer;
 
-typedef struct product
-{
+              
+typedef struct product{
 	char product_name[25];
 	char price[10];
 	char amount_of_product[5];
@@ -1787,11 +1787,26 @@ void costumer_profile(char userName[25])
 			printf("1 - Last Name: %s\n2 - First Name: %s\n3 - User Name: %s\n4 - Phone: %s\n5 - Age: %d\n6 - City: %s\n7 - Adress: %s\n8 - Password: %s\n\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password);
 			printf("If you want to edit your information, please enter 0\n");
 			scanf(" %s", choice);
-
+			if (strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+			{
+				return customer_menu();
+			}
+			if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
+			{
+				return menu_customer_profile();
+			}
 			if (atoi(choice) == 0) //else////////////////////////////////////// 
 			{
 				printf("Which fild do you want to update?\n");
 				scanf(" %s", choice);
+				if (strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+				{
+					return customer_menu();
+				}
+				if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
+				{
+					return menu_customer_profile();
+				}
 				if ((check_number(choice) == 0) && atoi(choice) <= 8 && atoi(choice) > 0)
 				{
 					if (atoi(choice) == 1)
@@ -2202,6 +2217,10 @@ void customer_menu()
 	printf("========================\n\n");
 	printf("To Search For Specific Product - Enter S.\n\nTo View Your Profile And Update Your Information - Enter 0.\n\nTo View Your Basket - Enter V.\n\n");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return menu();
+	}
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
 		printf("Enter name of product you want to add to your basket (	Capital letter only):\n");
@@ -2226,6 +2245,10 @@ void customer_menu()
 		num_product = some_category_costumer(atoi(choice));
 		printf("Select the product you want to add to your basket:\nIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
 		scanf(" %s", choice2);
+		if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+		{
+			return menu();
+		}
 		if (strcmp(choice2, "A") == 0 || strcmp(choice2, "a") == 0)
 		{
 			sort_A(choice);
@@ -2322,6 +2345,10 @@ void menu_customer_profile()
 	char choice[2];
 	printf("1 - To see your previous orders.\n2 - To view and update your details.\nWhat your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return customer_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -2380,6 +2407,10 @@ void menu_view_basket()
 	int check=0;
 	printf("1 - To edit your basket.\nB - To buy your basket.\nR - To return to the menu\nWhat your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return customer_menu();
+	}
 
 	while (check != 1)
 	{
@@ -2397,6 +2428,10 @@ void menu_view_basket()
 		}
 		printf("Select the number of the product you want to update: \n");
 		scanf(" %s", product_choice);
+		if (strcmp(product_choice, "R") == 0 || strcmp(product_choice, "r") == 0 || strcmp(product_choice, "H") == 0 || strcmp(product_choice, "h") == 0)
+		{
+			return customer_menu();
+		}
 		while (check_number(product_choice) == 1 || atoi(product_choice) > num_of_product || atoi(product_choice) < 1)
 		{
 			printf("The input is invalid, Try again\n");
@@ -2492,6 +2527,14 @@ void edit_customer_basket(int choice,int numofproduct)
 	} ///////////////////////////////////////////////////////check stock//////////////////////////////////////
 	printf("What is the new quantity you want to update? If you want to delete this product press 0.\n");
 	scanf(" %s", quantity);
+	if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0)
+	{
+		return customer_menu();
+	}
+	if (strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+	{
+		return menu_view_basket();
+	}
 	while (check_number(quantity) == 1)
 	{
 		printf("Your input is not valid, Try again.\n");
@@ -2902,8 +2945,8 @@ int some_category_costumer(int choice)
 	return serial_num;
 }
 
-void stock_update()
-{
+   
+void stock_update(){
 	FILE* fic = fopen("Basket.csv", "r+");
 	if (fic == NULL)
 		exit(1);
