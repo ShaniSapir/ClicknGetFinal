@@ -85,12 +85,12 @@ void view_specific_product(char product_name[25]);                              
 
 
 // Menu functions - Manager
-void manager_menu();                              //לא בדקתי
-void menu_add_category_product();                 //לא בדקתי
-void menu_order_status();                         //לא בדקתי
-void menu_view_orders_manager();                  //לא בדקתי
-void menu_view_stock();                           //לא בדקתי
-void menu_updating_product();                     //לא בדקת
+void manager_menu();                              
+void menu_add_category_product();                 
+void menu_order_status();                        
+void menu_view_orders_manager();                  
+void menu_view_stock();                          
+void menu_updating_product();                     
 void menu_delete();
 
 // Menu functions - Costumer
@@ -574,6 +574,14 @@ void add_category()
 	char some_category[25];
 	printf("Enter the new category you want to add: \n");
 	scanf(" %[^\n]", category);
+	if (strcmp(category, "R") == 0 || strcmp(category, "r") == 0)
+	{
+		return menu_add_category_product();
+	}
+	if (strcmp(category, "H") == 0 || strcmp(category, "h") == 0)
+	{
+		return manager_menu();
+	}
 	fseek(fic, 17, SEEK_SET);
 	while (string_check(category) == 1)
 	{
@@ -610,6 +618,14 @@ void add_product(char choice[5])
 	int counter = 0;
 	printf("Name of product (Only capital letters): ");
 	scanf(" %[^\n]", dataenter.product_name);
+	if (strcmp(dataenter.product_name, "R") == 0 || strcmp(dataenter.product_name, "r") == 0)
+	{
+		return menu_add_category_product();
+	}
+	if (strcmp(dataenter.product_name, "H") == 0 || strcmp(dataenter.product_name, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while (capital_letters_check(dataenter.product_name) == 1)
 	{
 		printf("Your product name is not valid, Please try again: ");
@@ -818,6 +834,14 @@ void search_order_by_number()
 	char c = ' ';
 	printf("\n Please enter the number of the order you are looking for :");
 	scanf(" %s", order);
+	if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
+	{
+		return menu_view_orders_manager();
+	}
+	if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
+	{
+		return manager_menu();
+	}
 	fseek(fic, 59, SEEK_SET);
 	while (c != EOF)
 	{
@@ -881,7 +905,14 @@ void search_order_by_customer()
 	char c = ' ';
 	printf("\n Please enter the name of the customer you are looking for :");
 	scanf(" %s", customer);
-
+	if (strcmp(customer, "R") == 0 || strcmp(customer, "r") == 0)
+	{
+		return menu_view_orders_manager();
+	}
+	if (strcmp(customer, "H") == 0 || strcmp(customer, "h") == 0)
+	{
+		return manager_menu();
+	}
 	for (i = 0; i < strlen(customer); i++)
 		if (customer[i] < 'A' || customer[i]>'z' || (customer[i] > 'Z' && customer[i] < 'a'))
 			break;
@@ -1056,6 +1087,14 @@ void update_status()
 	char c = ' ', d;
 	printf("\nPlease enter the number of the order you want to change the status :");
 	scanf(" %s", order);
+	if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
+	{
+		return menu_order_status();
+	}
+	if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
+	{
+		return manager_menu();
+	}
 	fseek(fic, 59, SEEK_SET);
 	while (c != EOF)
 	{
@@ -1274,7 +1313,16 @@ void update_product_by_search()
 	printf("\nPlease enter the name of the product you want to update (only with capital letters): ");
 	char product_name[25], product_nameNew[25];
 	product data;
+
 	scanf(" %[^\n]", product_name);
+	if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+	{
+		return manager_menu();
+	}
+	if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+	{
+		return menu_updating_product();
+	}
 	while (capital_letters_check(product_name) == 1)
 	{
 		printf("Your product name is not valid, Please try again: ");
@@ -1305,7 +1353,7 @@ void update_product_by_search()
 	}
 	if (strcmp(data.product_name, product_name) != 0)
 	{
-		printf("\nThe searched product has not been found.");
+		printf("\nThe searched product has not been found.\n");
 		return manager_menu();
 	}
 
@@ -1325,31 +1373,31 @@ void update_product_by_search()
 		scanf("%[^\n]", product_nameNew);
 		while (capital_letters_check(product_nameNew) == 1)
 		{
-			printf("Your product name is not valid, Please try again: ");
+			printf("Your product name is not valid, Please try again: \n");
 			getchar();
 			scanf(" %[^\n]", product_nameNew);
 		}
 	}
 	if (choice == '2')
 	{
-		printf("\nPlease enter the new price of the product (Positive integer number): ");
+		printf("\nPlease enter the new price of the product (Positive integer number): \n");
 		getchar();
 		scanf(" %[^\n]", price);
 		while (check_price(price) == 1)
 		{
-			printf("Your product price is not valid, Please try again :");
+			printf("Your product price is not valid, Please try again :\n");
 			getchar();
 			scanf(" %[^\n]", price);
 		}
 	}
 	if (choice == '3')
 	{
-		printf("\nPlease enter the new amount of the product: ");
+		printf("\nPlease enter the new amount of the product: \n");
 		getchar();
 		scanf(" %[^\n]", amount_of_product);
 		while (check_number(amount_of_product) == 1)
 		{
-			printf("Your product quantity is not valid, Please try again");
+			printf("Your product quantity is not valid, Please try again\n");
 			getchar();
 			scanf(" %[^\n]", amount_of_product);
 		}
@@ -1426,6 +1474,14 @@ void choose_product_to_update()
 	printf("Please select the category of the product you want to update: \n");
 	category_num = print_all_category();
 	scanf(" %s", &choice1);
+	if (strcmp(choice1, "H") == 0 || strcmp(choice1, "h") == 0)
+	{
+		return manager_menu();
+	}
+	if (strcmp(choice1, "R") == 0 || strcmp(choice1, "r") == 0)
+	{
+		return menu_updating_product();
+	}
 	while (check_number(choice1) != 0 || atoi(choice1) > category_num)
 	{
 		printf("The input is not valid!, please try again\n");
@@ -1435,6 +1491,14 @@ void choose_product_to_update()
 	printf("Please select the product you want to update: \n");
 	serial_num = view_specific_category(atoi(choice1));
 	scanf(" %s", &choice2);
+	if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+	{
+		return manager_menu();
+	}
+	if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+	{
+		return menu_updating_product();
+	}
 	while (check_number(choice2) != 0 || atoi(choice2) > serial_num)
 	{
 		printf("The input is not valid!, please try again\n");
@@ -1583,11 +1647,19 @@ void manager_profile()
 			printf("1 - Last Name: %s\n2 - First Name: %s\n3 - User Name: %s\n4 - Phone: %s\n5 - Age: %d\n6 - Password: %s\n\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.password);
 			printf("If you want to edit your information, please enter 0\n");
 			scanf(" %s", choice);
+			if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+			{
+				return manager_menu();
+			}
 
 			if (atoi(choice) == 0)
 			{
 				printf("Which fild do you want to update?\n");
 				scanf(" %s", choice);
+				if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+				{
+					return manager_menu();
+				}
 				if ((check_number(choice) == 0) && atoi(choice) <= 6 && atoi(choice) > 0)
 				{
 					if (atoi(choice) == 1)
@@ -1846,6 +1918,10 @@ void manager_menu()
 	printf("4 - To view the stock.\n5 - To see all order\n6 - To change status of an order\n7 - To view the profile\n");
 	printf("-------------------------------------------------------------\n");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 7 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -1887,10 +1963,14 @@ void menu_add_category_product()
 	char choice[2];
 	char choiceC[5];
 	int num_category;
-	printf("-------------------------------------------------\nSelect the action:\n");
+	printf("-----------------------------------\nSelect the action:\n");
 	printf("1 - To add new category.\n2 - To add new product.\n");
-	printf("-------------------------------------------------\n");
+	printf("-----------------------------------\n");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -1905,6 +1985,10 @@ void menu_add_category_product()
 		num_category = print_all_category();
 		printf("Please choose the category\n");
 		scanf(" %s", choiceC);
+		if (strcmp(choiceC, "R") == 0 || strcmp(choiceC, "r") == 0 || strcmp(choiceC, "H") == 0 || strcmp(choiceC, "h") == 0)
+		{
+			return manager_menu();
+		}
 		while ((check_number(choiceC) == 1) || atoi(choiceC) > num_category || atoi(choiceC) < 1)
 		{
 			printf("The input is invalid, Try again\n");
@@ -1922,14 +2006,24 @@ void menu_delete()
 	int num_category;
 	int num_product;
 	num_category = print_all_category();
+	printf("Select the category you want to delete the product from:\n");
 	scanf(" %s", choice1);
+	if (strcmp(choice1, "R") == 0 || strcmp(choice1, "r") == 0 || strcmp(choice1, "H") == 0 || strcmp(choice1, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice1) == 1) || atoi(choice1) > num_category || atoi(choice1) < 1)
 	{
 		printf("The input is invalid, Try again\n");
 		scanf(" %s", choice1);
 	}
 	num_product = view_specific_category(atoi(choice1));
+	printf("Select the prioduct you want to delete:\n");
 	scanf(" %s", choice2);
+	if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice2) == 1) || atoi(choice2) > num_product || atoi(choice2) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -1944,6 +2038,10 @@ void menu_order_status()
 	char choice[2];
 	printf("1 - To see all the approved orders.\n2 - To see all canceled orders.\n3 - To see all orders that are not updated.\n4 - To update the status of an order.\n\nWhat is your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 4 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -1964,6 +2062,10 @@ void menu_view_orders_manager()
 	char choice[2];
 	printf("1 - To search by order number.\n2 - To search by a customer.\n3 - To see all the orders.\n\nWhat your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 3 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -1988,6 +2090,10 @@ void menu_view_stock()
 	int num_category;
 	printf("1 - To see all the products.\n2 - To search for a specific category.\n3 - Searching for a specific product.\n\nWhat your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 3 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -2000,6 +2106,10 @@ void menu_view_stock()
 		printf("Choose category:\n ");
 		num_category = print_all_category();
 		scanf(" %s", choice_cat);
+		if (strcmp(choice_cat, "R") == 0 || strcmp(choice_cat, "r") == 0 || strcmp(choice_cat, "H") == 0 || strcmp(choice_cat, "h") == 0)
+		{
+			return manager_menu();
+		}
 		while ((check_number(choice_cat) == 1) || atoi(choice_cat) > num_category || atoi(choice_cat) < 1)
 		{
 			printf("The input is invalid, Try again\n");
@@ -2058,8 +2168,12 @@ void menu_view_stock()
 void menu_updating_product()
 {
 	char choice[2];
-	printf("1 - Searching for a specific product.\n2 - Print all categories choose.\n\nWhat your choice? ");
+	printf("1 - Searching for a specific product.\n2 - Choose the category and then the product you want to update .\n\nWhat your choice? ");
 	scanf(" %s", choice);
+	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+	{
+		return manager_menu();
+	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
 		printf("The input is invalid, Try again\n");
@@ -2090,10 +2204,11 @@ void customer_menu()
 	scanf(" %s", choice);
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
-		printf("Enter name of product you want to add to your basket (capital letter only):\n");
+		printf("Enter name of product you want to add to your basket (	Capital letter only):\n");
 		scanf(" %s", product);
 		while (capital_letters_check(product) == 1)
 		{
+			scanf(" %s", product);
 			printf("Your product name is not valid, Please try again\n");
 		}
 		return search_product_customer(product);
@@ -2109,7 +2224,7 @@ void customer_menu()
 	else if (atoi(choice) > 0 || atoi(choice) <= num_category)
 	{
 		num_product = some_category_costumer(atoi(choice));
-		printf("Select the product you want to add to your basket :\n\tIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
+		printf("Select the product you want to add to your basket:\nIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
 		scanf(" %s", choice2);
 		if (strcmp(choice2, "A") == 0 || strcmp(choice2, "a") == 0)
 		{
@@ -2142,7 +2257,7 @@ void customer_menu()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////סיימנו
+
 void search_product_customer(char productT[25])
 {
 	FILE* fic = fopen("CategoriesAndProducts.csv", "r+");
@@ -2178,7 +2293,8 @@ void search_product_customer(char productT[25])
 	}
 	if (strcmp(data.product_name, productT) != 0)
 	{
-		printf("\nThe searched product has not been found.");
+		printf("\nOops! Looks like we could'nt find this product.\n");
+		//printf("\nThe searched product has not been found.");
 		return customer_menu();
 	}
 	printf("Name: %s\nPrice: %s\n", data.product_name, data.price);
@@ -2200,7 +2316,7 @@ void search_product_customer(char productT[25])
 	return customer_menu();
 }
 
-// Prints menu of customer profile - view and edit        ////////////////////////////////////////////////////סיימנו
+// Prints menu of customer profile - view and edit       
 void menu_customer_profile()
 {
 	char choice[2];
@@ -2217,7 +2333,7 @@ void menu_customer_profile()
 		return costumer_profile(current_user);
 }
 
-// prints customers previous orders       ////////////////////////////////////////////////////סיימנו
+// prints customers previous orders       
 void print_previous_order_costumer()
 {
 	FILE* fic = fopen("Orders.csv", "r+");
@@ -2302,7 +2418,7 @@ void menu_view_basket()
 }
 
 
-// prints all products in basket //////////////////////////////////// סיימנו
+// prints all products in basket 
 int print_customer_basket()
 {
 	FILE* fic = fopen("Basket.csv", "r+");
@@ -2340,7 +2456,7 @@ int print_customer_basket()
 	return num_product;
 }
 
-//////////////////////////////////// סיימנו/////////////////////////////
+
 void edit_customer_basket(int choice,int numofproduct)
 {
 	FILE* fic = fopen("Basket.csv", "r+");
