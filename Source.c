@@ -1930,12 +1930,17 @@ void manager_menu()
 	char choice[2];
 	printf("-------------------------------------------------------------\nPlease select what do you want to do\n");
 	printf("1 - To add an item or category.\n2 - To delete product from catalog.\n3 - To update product details.\n");
-	printf("4 - To view the stock.\n5 - To see all order\n6 - To change status of an order\n7 - To view the profile\n");
+	printf("4 - To view the stock.\n5 - To see all order\n6 - To change status of an order\n7 - To view the profile\nTO LOG-OUT PRESS L\n");
+	printf("At any point, you can return to the previous page by clicking 'R', or return to the main menu by clicking 'H'\n");
 	printf("-------------------------------------------------------------\n");
 	scanf(" %s", choice);
 	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 	{
 		return menu();
+	}
+	if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0 )
+	{
+		exit(1);
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 7 || atoi(choice) < 1)
 	{
@@ -2215,11 +2220,16 @@ void customer_menu()
 	printf("\nSelect Category To Shop From:\n========================\n");
 	num_category = print_all_category();
 	printf("========================\n\n");
-	printf("To Search For Specific Product - Enter S.\n\nTo View Your Profile And Update Your Information - Enter 0.\n\nTo View Your Basket - Enter V.\n\n");
+	printf("To Search For Specific Product - Enter S.\n\nTo View Your Profile And Update Your Information - Enter 0.\n\nTo View Your Basket - Enter V.\n\nTO LOG-OUT PRESS L\n\n");
+	printf("At any point, you can return to the previous page by clicking 'R', or return to the main menu by clicking 'H'\n");
 	scanf(" %s", choice);
 	if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 	{
 		return menu();
+	}
+	if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0)
+	{
+		exit(1);
 	}
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
