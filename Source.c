@@ -2767,7 +2767,7 @@ void customer_menu()
 			sort_D(choice);
 			return customer_menu();
 		}
-		else if (check_number(choice2)==0&&(atoi(choice2) > 0 && atoi(choice2) <= num_category))
+		else if (check_number(choice2)==0&&(atoi(choice2) > 0 && atoi(choice2) <= num_product))
 		{
 			printf("What is the quantity you want?\n");
 			scanf(" %s", quantity);
