@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
 
-//shani
 static char current_user[25];
 
 typedef struct manager
@@ -44,27 +44,27 @@ int termofuse();
 int login_manager();
 int login_customer();
 
-int string_check(char str[25]);                                                 ////////    v
-int capital_letters_check(char str[25]);                                        ////////    v
-int check_price(char price[25]);                                                ////////    v
-int check_number(char amount[25]);                                              ////////    v
-int check_phone(char phone[11]);                                                ////////    v
-int check_password(char password[25]);                                          ////////    v
+int string_check(char str[25]);                                      
+int capital_letters_check(char str[25]);                              
+int check_price(char price[25]);                                             
+int check_number(char amount[25]);                                  
+int check_phone(char phone[11]);                                        
+int check_password(char password[25]);                               
 int check_adress(char adress[50]);
 int check_ID(char number[10]);
 
-void add_category();                                                            ////////    v
-void add_product(char choice[5]);                                               ////////    v
-void delete_product(char choicecat[5], char choicepro[5]);                      ////////    v
-void update_product_by_search();                                                ////////    v
-void choose_product_to_update();                                                ////////    v
-void print_all_orders();                                                        ////////    v
-int print_all_category(); //returns number of printed categories                ////////    v
+void add_category();                                           
+void add_product(char choice[5]);                                         
+void delete_product(char choicecat[5], char choicepro[5]);                    
+void update_product_by_search();                                  
+void choose_product_to_update();                                  
+void print_all_orders();                                                
+int print_all_category(); //returns number of printed categories     
 
 
 // print orders - manager, ZACC
-void print_all_orders();                                                        ////////    v
-void search_order_by_number();                                                  ////////    v
+void print_all_orders();                                            
+void search_order_by_number();                                  
 void search_order_by_customer();                     //לא בדקתי
 
 
@@ -75,13 +75,13 @@ void print_not_updated_orders();                     //לא בדקתי
 void update_status();                                //לא בדקתי
 
 
-void manager_profile();                                                         ////////    v
+void manager_profile();                                                  
 void costumer_profile(char userName[25]);
 
 // view stock functions - 3
-void view_all_stock();                                                          ////////    v
-int view_specific_category(int choice);                                         ////////    v
-void view_specific_product(char product_name[25]);                              ////////    v
+void view_all_stock();                                                  
+int view_specific_category(int choice);                           
+void view_specific_product(char product_name[25]);             
 
 
 // Menu functions - Manager
@@ -114,33 +114,42 @@ void sort_D(char category[5]);
 int some_category_costumer(int choice);
 void stock_update();
 void update_in_stock(char product_name[25], char quantity[5], int i);
+void Color(int couleurDuTexte, int couleurDeFond)
+{
+	HANDLE H = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(H, couleurDeFond * 16 + couleurDuTexte);
+}
 
 
 int main()
 {
-	FILE* fic = fopen("Basket.csv", "w+");
-	fputc(' ', fic);
-	fclose(fic);
+	Color(15, 0);
 	menu();
 	return 0;
 }
 
 void menu()
 {
+	FILE* fic = fopen("Basket.csv", "w+");
+	fputc(' ', fic);
+	fclose(fic);
 	char account[2], connection[2];
 	printf("What Kind Of User You Are?\t1 - Manager\t2 - Customer\n");
-	//printf("\t1 - Manager\t2 - Customer\n");
 	scanf(" %s", account);
 	while (atoi(account) != 1 && atoi(account) != 2)
 	{
+		Color(4, 0);
 		printf("Bad choice. Try again\n");
+		Color(15, 0);
 		scanf(" %s", account);
 	}
 	printf("\nAlready Have An Account? - Press 1 to Log In.\nNew? Join Us! - Press 2 to Register.\n");
 	scanf(" %s", connection);
 	while (atoi(connection) != 1 && atoi(connection) != 2)
 	{
+		Color(4, 0);
 		printf("Bad choice. Try again\n");
+		Color(15, 0);
 		scanf(" %s", connection);
 	}
 
@@ -149,13 +158,21 @@ void menu()
 		if (atoi(connection) == 1)
 		{
 			while (login_manager() == 0)
+			{
+				Color(4, 0);
 				printf("\nYour user name or your password is not correct. Please try again.\n");
+				Color(15, 0);
+			}
 			manager_menu();
 		}
 		else
 		{
 			if (register_manager() == 0)
+			{
+				Color(4, 0);
 				printf("Please note, you hasn't been registered.\n");
+				Color(15, 0);
+			}
 			return menu();
 
 		}
@@ -165,13 +182,21 @@ void menu()
 		if (atoi(connection) == 1)
 		{
 			while (login_customer() == 0)
+			{
+				Color(4, 0);
 				printf("\nYour user name or your password is not correct. Please try again.\n");
+				Color(15, 0);
+			}
 			customer_menu();
 		}
 		else
 		{
 			if (register_customer() == 0)
+			{
+				Color(4, 0);
 				printf("Please note, you hasn't been registered.\n");
+				Color(15, 0);
+			}
 			return menu();
 		}
 	}
@@ -188,7 +213,7 @@ int register_manager()
 
 	do
 	{
-		printf("Last name (without characters): ");
+		printf("\n\nLast name (without characters): ");
 		scanf("%s", data.last_name);
 		printf("First name (without characters): ");
 		scanf("%s", data.first_name);
@@ -223,7 +248,7 @@ int register_customer()
 
 	do
 	{
-		printf("Last name (without characters): ");
+		printf("\n\nLast name (without characters): ");
 		scanf("%s", data.last_name);
 		printf("First name (without characters): ");
 		scanf("%s", data.first_name);
@@ -259,7 +284,9 @@ int checkm(char last[25], char first[25], char user[25], char phone[11], int age
 	{
 		if (last[i] < 'A' || last[i]>'z' || (last[i] > 'Z' && last[i] < 'a'))
 		{
+			Color(4, 0);
 			printf("\nYour last name is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
@@ -267,25 +294,33 @@ int checkm(char last[25], char first[25], char user[25], char phone[11], int age
 	{
 		if (first[i] < 'A' || first[i]>'z' || (first[i] > 'Z' && first[i] < 'a'))
 		{
+			Color(4, 0);
 			printf("\nYour first name is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
 	if (phone[0] != '0' || phone[1] != '5' || phone[10] != '\0')
 	{
+		Color(4, 0);
 		printf("\nYour phone number is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	if (age > 120)
 	{
+		Color(4, 0);
 		printf("\nYour age is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	for (int i = 2; i < 10; i++)
 	{
 		if (phone[i] < '0' || phone[i]>'9')
 		{
+			Color(4, 0);
 			printf("\nYour phone number is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
@@ -294,7 +329,9 @@ int checkm(char last[25], char first[25], char user[25], char phone[11], int age
 			cap_letter++;
 	if (strlen(password1) < 6 || strlen(password2) < 6 || strlen(password1) != strlen(password2) || cap_letter == 0 || strcmp(password1, password2) != 0)
 	{
+		Color(4, 0);
 		printf("\nYour password is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	return 1;
@@ -307,7 +344,9 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 	{
 		if (last[i] < 'A' || last[i]>'z' || (last[i] > 'Z' && last[i] < 'a'))
 		{
+			Color(4, 0);
 			printf("\nYour last name is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
@@ -315,33 +354,43 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 	{
 		if (first[i] < 'A' || first[i]>'z' || (first[i] > 'Z' && first[i] < 'a'))
 		{
+			Color(4, 0);
 			printf("\nYour first name is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
 	if (phone[0] != '0' || phone[1] != '5' || phone[10] != '\0')
 	{
+		Color(4, 0);
 		printf("\nYour phone number is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	for (int i = 2; i < 10; i++)
 	{
 		if (phone[i] < '0' || phone[i]>'9')
 		{
+			Color(4, 0);
 			printf("\nYour phone number is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
 	if (age > 120)
 	{
+		Color(4, 0);
 		printf("\nYour age is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	for (int i = 0; i < strlen(city); i++)
 	{
 		if (city[i] < 'A' || city[i]>'z' || (city[i] > 'Z' && city[i] < 'a'))
 		{
+			Color(4, 0);
 			printf("\nYour city is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 	}
@@ -349,7 +398,9 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 	{
 		if ((adress[i] < '0' && adress[i] != ' ') || adress[i] > 'z' || (adress[i] > 'Z' && adress[i] < 'a') || (adress[i] > '9' && adress[i] < 'A'))
 		{
+			Color(4, 0);
 			printf("\nYour adress is not correct. Please try again.\n");
+			Color(15, 0);
 			return 0;
 		}
 		if (adress[i] >= '0' && adress[i] <= '9')
@@ -357,7 +408,9 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 	}
 	if (number == 0)
 	{
+		Color(4, 0);
 		printf("\nYour age is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	for (int i = 0; i < strlen(password1); i++)
@@ -365,7 +418,9 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 			cap_letter++;
 	if (strlen(password1) < 6 || strlen(password2) < 6 || strlen(password1) != strlen(password2) || cap_letter == 0 || strcmp(password1, password2) != 0)
 	{
+		Color(4, 0);
 		printf("\nYour password is not correct. Please try again.\n");
+		Color(15, 0);
 		return 0;
 	}
 	return 1;
@@ -374,19 +429,24 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 int termofuse()
 {
 	int choice;
-	printf("Welcome to the site, maintaining your privacy is important to us and we pay special attention to it.\n");
+	Color(11, 0);
+	printf("\n\n\nWelcome to the site, maintaining your privacy is important to us and we pay special attention to it.\n");
 	printf("This document represents the privacy policy of 'CLICK AND GET' Ltd.regarding the information provided by you within the site.\nThe purpose of the privacy policy is to ensure that the data about you in databases and their use will be made only in accordance with your consent and the law.\n");
 	printf("A legal obligation to provide the informationand its delivery depends on your consentand desire.");
 	printf("\n- What information do we collectand why ?\nTechnical information that may include browsing and exposure data stored for statistical purposes.");
 	printf("\n- Is the information about you passed on to third parties ?\nThe company will not pass on your personal information to others.");
 	printf("\n- Is the information about you secure ?\nThe company uses advanced technological security measures to secure your information.\n");
 	printf("\n\n1- Accept\t\t\t2- Deny\n");
+	Color(15, 0);
 	scanf_s("%d", &choice);
 	while (choice != 1 && choice != 2)
 	{
+		Color(4, 0);
 		printf("Bad choice. Try again\n");
+		Color(15, 0);
 		scanf_s("%d", &choice);
 	}
+	printf("\n\n\n");
 	if (choice == 2)
 		return 0;
 	return 1;
@@ -576,17 +636,31 @@ void add_category()
 	scanf(" %[^\n]", category);
 	if (strcmp(category, "R") == 0 || strcmp(category, "r") == 0)
 	{
+		fclose(fic);
 		return menu_add_category_product();
 	}
 	if (strcmp(category, "H") == 0 || strcmp(category, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	fseek(fic, 17, SEEK_SET);
 	while (string_check(category) == 1)
 	{
+		Color(4, 0);
 		printf("Your category name is not correct, Please try again\n");
+		Color(15, 0);
 		scanf(" %[^\n]", category);
+		if (strcmp(category, "R") == 0 || strcmp(category, "r") == 0)
+		{
+			fclose(fic);
+			return menu_add_category_product();
+		}
+		if (strcmp(category, "H") == 0 || strcmp(category, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
 	}
 	char test[5000];
 	do
@@ -594,14 +668,18 @@ void add_category()
 		fscanf(fic, " %[^,],%[^\n]\n", some_category, test);
 		if (strcmp(some_category, category) == 0)
 		{
+			Color(4, 0);
 			printf("\nThe inserted category already exists\n");
+			Color(15, 0);
 			fclose(fic);
 			return manager_menu();
 		}
 	} while (!feof(fic));
 
-	fprintf(fic, "\n%s,", category);
+	fprintf(fic, "\n%s", category);
+	Color(10, 0);
 	printf("\nThe new category has been added\n");
+	Color(15, 0);
 	fclose(fic);
 	return manager_menu();
 }
@@ -620,36 +698,73 @@ void add_product(char choice[5])
 	scanf(" %[^\n]", dataenter.product_name);
 	if (strcmp(dataenter.product_name, "R") == 0 || strcmp(dataenter.product_name, "r") == 0)
 	{
+		fclose(fic);
 		return menu_add_category_product();
 	}
 	if (strcmp(dataenter.product_name, "H") == 0 || strcmp(dataenter.product_name, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	while (capital_letters_check(dataenter.product_name) == 1)
 	{
+		Color(4, 0);
 		printf("Your product name is not valid, Please try again: ");
+		Color(15, 0);
 		scanf(" %[^\n]", dataenter.product_name);
+		if (strcmp(dataenter.product_name, "R") == 0 || strcmp(dataenter.product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_add_category_product();
+		}
+		if (strcmp(dataenter.product_name, "H") == 0 || strcmp(dataenter.product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
 	}
-
 	printf("Price of product (Positive integer number): ");
 	scanf(" %[^\n]", dataenter.price);
 	while (check_price(dataenter.price) == 1)
 	{
+		Color(4, 0);
 		printf("Your product price is not valid, Please try again :");
+		Color(15, 0);
 		scanf(" %[^\n]", dataenter.price);
+		if (strcmp(dataenter.product_name, "R") == 0 || strcmp(dataenter.product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_add_category_product();
+		}
+		if (strcmp(dataenter.product_name, "H") == 0 || strcmp(dataenter.product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
 	}
 
 	printf("Amount of product: ");
 	scanf(" %[^\n]", dataenter.amount_of_product);
 	while (check_number(dataenter.amount_of_product) == 1)
 	{
+		Color(4, 0);
 		printf("Your product quantity is not valid, Please try again");
+		Color(15, 0);
 		scanf(" %[^\n]", dataenter.amount_of_product);
+		if (strcmp(dataenter.product_name, "R") == 0 || strcmp(dataenter.product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_add_category_product();
+		}
+		if (strcmp(dataenter.product_name, "H") == 0 || strcmp(dataenter.product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
 	}
 
 	product data;
-	fseek(fic, 21, SEEK_SET);
+	fseek(fic, 20, SEEK_SET);
 	while (!feof(fic))
 	{
 		if (counter == choice2 - 1)
@@ -658,7 +773,7 @@ void add_product(char choice[5])
 		if (c == '\n')
 			++counter;
 	}
-	while (c != ',')
+	while (c != ',' && c != EOF)
 		c = fgetc(fic);
 
 	while (!feof(fic) && c != '\n')
@@ -667,7 +782,9 @@ void add_product(char choice[5])
 		fscanf(fic, "%[^;]", data.product_name);
 		if (strcmp(data.product_name, dataenter.product_name) == 0)
 		{
+			Color(4, 0);
 			printf("The inserted product already exists");
+			Color(15, 0);
 			fclose(fic);
 			return menu_add_category_product();
 		}
@@ -710,7 +827,9 @@ void add_product(char choice[5])
 	}
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("\nThe product has been added successfully\n");
+	Color(15, 0);
 	return manager_menu();
 }
 
@@ -762,7 +881,9 @@ void delete_product(char choicecat[5], char choicepro[5])
 	}
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("\nThe product has been deleted successfully\n");
+	Color(15, 0);
 	return manager_menu();
 }
 
@@ -777,6 +898,7 @@ int print_all_category()
 	fseek(fic, 18, SEEK_SET);
 	char category[25];
 	int num = 0;
+	Color(9, 0);
 	printf("CATEGORIES:\n");
 	char c = fgetc(fic);
 	while (!feof(fic))
@@ -790,6 +912,7 @@ int print_all_category()
 			c = fgetc(fic);
 		}
 	}
+	Color(15, 0);
 	fclose(fic);
 	return num;
 }
@@ -804,6 +927,7 @@ void print_all_orders()
 	int amount, total;
 	char c = ' ';
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	printf("\nNumber of the order / Status / Customer / Amount / Total / Products \n\n", nbr_orders, status, nameofcustomer);
 	while (!feof(fic))
 	{
@@ -819,6 +943,7 @@ void print_all_orders()
 		if (c == '\n')
 			printf("\n");
 	}
+	Color(15, 0);
 	fclose(fic);
 	printf("\n");
 }
@@ -836,10 +961,12 @@ void search_order_by_number()
 	scanf(" %s", order);
 	if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
 	{
+		fclose(fic);
 		return menu_view_orders_manager();
 	}
 	if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	fseek(fic, 59, SEEK_SET);
@@ -856,12 +983,24 @@ void search_order_by_number()
 	}
 	while (i != strlen(order) || atoi(order) > counter)
 	{
+		Color(4, 0);
 		printf("\n Your number is not correct. Try again :");
+		Color(15, 0);
 		scanf(" %s", order);
 		for (i = 0; i < strlen(order); i++)
 		{
 			if (order[i] < '0' || order[i] >'9')
 				break;
+		}
+		if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
+		{
+			fclose(fic);
+			return menu_view_orders_manager();
+		}
+		if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
 		}
 	}
 	fseek(fic, 59, SEEK_SET);
@@ -873,6 +1012,7 @@ void search_order_by_number()
 		{
 			c = ' ';
 			fscanf(fic, "%[^,],%[^,],%d,%d,", status, nameofcustomer, &amount, &total);
+			Color(9, 0);
 			printf("\nStatus: %s\nCustomer: %s\nAmount: %d\nTotal: %d\nProducts: ", status, nameofcustomer, amount, total);
 			while (c != '\n' && c != EOF)
 			{
@@ -887,8 +1027,13 @@ void search_order_by_number()
 		while (c != '\n' && c != EOF)
 			c = fgetc(fic);
 	}
+	Color(15, 0);
 	if (c != 'X')
-		printf("\n Your order number is not correct.");
+	{
+		Color(4, 0);
+		printf("\n Your order number is not correct.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return manager_menu();
 }
@@ -907,10 +1052,12 @@ void search_order_by_customer()
 	scanf(" %s", customer);
 	if (strcmp(customer, "R") == 0 || strcmp(customer, "r") == 0)
 	{
+		fclose(fic);
 		return menu_view_orders_manager();
 	}
 	if (strcmp(customer, "H") == 0 || strcmp(customer, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	for (i = 0; i < strlen(customer); i++)
@@ -919,13 +1066,26 @@ void search_order_by_customer()
 
 	while (i != strlen(customer))
 	{
+		Color(4, 0);
 		printf("\n Your name of the customer is not correct. Try again :");
+		Color(15, 0);
 		scanf(" %s", customer);
 		for (i = 0; i < strlen(customer); i++)
 			if (customer[i] < 'A' || customer[i]>'z' || (customer[i] > 'Z' && customer[i] < 'a'))
 				break;
+		if (strcmp(customer, "R") == 0 || strcmp(customer, "r") == 0)
+		{
+			fclose(fic);
+			return menu_view_orders_manager();
+		}
+		if (strcmp(customer, "H") == 0 || strcmp(customer, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
 	}
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		c = ' ';
@@ -941,14 +1101,18 @@ void search_order_by_customer()
 				c = fgetc(fic);
 			}
 			printf("\n");
-			c = 'X';
 			counter = -1;
 		}
 		while (c != '\n' && c != EOF)
 			c = fgetc(fic);
 	}
+	Color(15, 0);
 	if (counter != -1)
-		printf("\n Your customer name is not correct.");
+	{
+		Color(4, 0);
+		printf("\n Your customer name is not correct.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return manager_menu();
 }
@@ -965,6 +1129,7 @@ void print_canceled_orders()
 	int amount, total, i, counter = 1;
 	char c = ' ';
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		c = ' ';
@@ -989,8 +1154,13 @@ void print_canceled_orders()
 				c = fgetc(fic);
 		}
 	}
+	Color(15, 0);
 	if (counter != -1)
-		printf("\n There are no canceled orders.");
+	{
+		Color(4, 0);
+		printf("\n There are no canceled orders.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return manager_menu();
 }
@@ -1005,6 +1175,7 @@ void print_approved_orders()
 	int amount, total, i, counter = 1;
 	char c = ' ';
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		c = ' ';
@@ -1029,8 +1200,13 @@ void print_approved_orders()
 				c = fgetc(fic);
 		}
 	}
+	Color(15, 0);
 	if (counter != -1)
-		printf("\n There are no approved orders.");
+	{
+		Color(4, 0);
+		printf("\n There are no approved orders.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return manager_menu();
 }
@@ -1045,6 +1221,7 @@ void print_not_updated_orders()
 	int amount, total, i, counter = 1;
 	char c = ' ';
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		c = ' ';
@@ -1069,8 +1246,13 @@ void print_not_updated_orders()
 				c = fgetc(fic);
 		}
 	}
+	Color(15, 0);
 	if (counter != -1)
-		printf("\n There are no orders that are no updated.");
+	{
+		Color(4, 0);
+		printf("\n There are no orders that are no updated.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return manager_menu();
 }
@@ -1089,10 +1271,12 @@ void update_status()
 	scanf(" %s", order);
 	if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
 	{
+		fclose(fic);
 		return menu_order_status();
 	}
 	if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	fseek(fic, 59, SEEK_SET);
@@ -1109,12 +1293,24 @@ void update_status()
 	}
 	while (i != strlen(order) || atoi(order) > counter)
 	{
+		Color(4, 0);
 		printf("\nYour number is not correct. Try again :");
+		Color(15, 0);
 		scanf(" %s", order);
 		for (i = 0; i < strlen(order); i++)
 		{
 			if (order[i] < '0' || order[i] >'9')
 				break;
+		}
+		if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
+		{
+			fclose(fic);
+			return menu_order_status();
+		}
+		if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
 		}
 	}
 	fseek(fic, 0, SEEK_SET);
@@ -1137,8 +1333,20 @@ void update_status()
 			scanf(" %s", choice);
 			while (atoi(choice) != 1 && atoi(choice) != 2)
 			{
+				Color(4, 0);
 				printf("\nYour choice is not correct. Try again :");
+				Color(15, 0);
 				scanf(" %s", choice);
+				if (strcmp(order, "R") == 0 || strcmp(order, "r") == 0)
+				{
+					fclose(fic);
+					return menu_order_status();
+				}
+				if (strcmp(order, "H") == 0 || strcmp(order, "h") == 0)
+				{
+					fclose(fic);
+					return manager_menu();
+				}
 			}
 			fprintf(fic2, "%s,", nbr_orders);
 			fscanf(fic, "%[^,]", status);
@@ -1159,7 +1367,9 @@ void update_status()
 					break;
 				fputc(c, fic2);
 			}
+			Color(10, 0);
 			printf("The change has been made.\n");
+			Color(15, 0);
 			break;
 		}
 		else
@@ -1205,12 +1415,11 @@ void view_all_stock()
 		exit(1);
 	char c = fgetc(fic);
 	fseek(fic, 19, SEEK_SET);
-
+	Color(9, 0);
 	while (!feof(fic))
 	{
-		while (c != ',')
+		while (c != ','&&c!=EOF)
 			c = fgetc(fic);
-
 		while (!feof(fic) && c != '\n')
 		{
 			++serial_num;
@@ -1221,6 +1430,7 @@ void view_all_stock()
 			c = fgetc(fic);
 		}
 	}
+	Color(15, 0);
 	fclose(fic);
 	return manager_menu();
 }
@@ -1251,9 +1461,15 @@ int view_specific_category(int choice)
 				break;
 		}
 	}
-	while (c != ',')
+	while (c != ','&&c!=EOF)
 		c = fgetc(fic);
-
+	if (c == EOF)
+	{
+		Color(4, 0);
+		printf("There are no product in this category.\n");
+		Color(15, 0);
+	}
+	Color(9, 0);
 	while (!feof(fic) && c != '\n')
 	{
 		++serial_num;
@@ -1263,6 +1479,7 @@ int view_specific_category(int choice)
 		c = fgetc(fic);
 		c = fgetc(fic);
 	}
+	Color(15, 0);
 	fclose(fic);
 	return serial_num;
 }
@@ -1277,6 +1494,7 @@ void view_specific_product(char product_name[25])
 	fseek(fic, 20, SEEK_SET);
 	char c = ' ';
 	product data;
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		while (c != ',')
@@ -1298,6 +1516,7 @@ void view_specific_product(char product_name[25])
 		if (test == -1)
 			break;
 	}
+	Color(15, 0);
 	fclose(fic);
 	return manager_menu();
 }
@@ -1317,18 +1536,32 @@ void update_product_by_search()
 	scanf(" %[^\n]", product_name);
 	if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
 	{
+		fclose(fic);
 		return menu_updating_product();
 	}
 	while (capital_letters_check(product_name) == 1)
 	{
+		Color(4, 0);
 		printf("Your product name is not valid, Please try again: ");
+		Color(15, 0);
 		scanf(" %[^\n]", product_name);
+		if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_updating_product();
+		}
 	}
-	fseek(fic, 21, SEEK_SET);
+	fseek(fic, 20, SEEK_SET);
 	char c = fgetc(fic), d = ' ';
 	while (!feof(fic))
 	{
@@ -1353,18 +1586,42 @@ void update_product_by_search()
 	}
 	if (strcmp(data.product_name, product_name) != 0)
 	{
+		Color(4, 0);
 		printf("\nThe searched product has not been found.\n");
+		Color(15, 0);
 		return manager_menu();
 	}
 
 	printf("\n1 - Name\n2 - Price\n3 - Quantity\n");
 	getchar();
 	scanf("%c", &choice);
+	if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+	{
+		fclose(fic);
+		return manager_menu();
+	}
+	if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+	{
+		fclose(fic);
+		return menu_updating_product();
+	}
 	while (choice < '0' && choice>'3')
 	{
+		Color(4, 0);
 		printf("Your choice is not good. Try again.\n");
+		Color(15, 0);
 		getchar();
 		scanf("%c", &choice);
+		if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_updating_product();
+		}
 	}
 	if (choice == '1')
 	{
@@ -1373,7 +1630,9 @@ void update_product_by_search()
 		scanf("%[^\n]", product_nameNew);
 		while (capital_letters_check(product_nameNew) == 1)
 		{
+			Color(4, 0);
 			printf("Your product name is not valid, Please try again: \n");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", product_nameNew);
 		}
@@ -1385,7 +1644,9 @@ void update_product_by_search()
 		scanf(" %[^\n]", price);
 		while (check_price(price) == 1)
 		{
+			Color(4, 0);
 			printf("Your product price is not valid, Please try again :\n");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", price);
 		}
@@ -1397,7 +1658,9 @@ void update_product_by_search()
 		scanf(" %[^\n]", amount_of_product);
 		while (check_number(amount_of_product) == 1)
 		{
+			Color(4, 0);
 			printf("Your product quantity is not valid, Please try again\n");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", amount_of_product);
 		}
@@ -1452,7 +1715,9 @@ void update_product_by_search()
 	}
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("Product successfully updated\n");
+	Color(15, 0);
 	return manager_menu();
 }
 
@@ -1476,33 +1741,68 @@ void choose_product_to_update()
 	scanf(" %s", &choice1);
 	if (strcmp(choice1, "H") == 0 || strcmp(choice1, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	if (strcmp(choice1, "R") == 0 || strcmp(choice1, "r") == 0)
 	{
+		fclose(fic);
 		return menu_updating_product();
 	}
 	while (check_number(choice1) != 0 || atoi(choice1) > category_num)
 	{
+		Color(4, 0);
 		printf("The input is not valid!, please try again\n");
+		Color(15, 0);
 		scanf(" %s", &choice1);
+		if (strcmp(choice1, "H") == 0 || strcmp(choice1, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(choice1, "R") == 0 || strcmp(choice1, "r") == 0)
+		{
+			fclose(fic);
+			return menu_updating_product();
+		}
 	}
 
 	printf("Please select the product you want to update: \n");
 	serial_num = view_specific_category(atoi(choice1));
+	if (serial_num == 0)
+	{
+		Color(4, 0);
+		printf("They are no products in this category.\n");
+		Color(15, 0);
+		return manager_menu();
+	}
 	scanf(" %s", &choice2);
 	if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
 	{
+		fclose(fic);
 		return manager_menu();
 	}
 	if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
 	{
+		fclose(fic);
 		return menu_updating_product();
 	}
 	while (check_number(choice2) != 0 || atoi(choice2) > serial_num)
 	{
+		Color(4, 0);
 		printf("The input is not valid!, please try again\n");
+		Color(15, 0);
 		scanf(" %s", &choice2);
+		if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+		{
+			fclose(fic);
+			return menu_updating_product();
+		}
 	}
 	FILE* fic2 = fopen("CategoriesAndProductsTEST.csv", "w+");
 	c = fgetc(fic);
@@ -1511,7 +1811,7 @@ void choose_product_to_update()
 		putc(c, fic2);
 		c = fgetc(fic);
 	}
-	//fseek(fic, 19, SEEK_SET);
+
 	while (!feof(fic))
 	{
 		if (c == '\n')
@@ -1536,11 +1836,33 @@ void choose_product_to_update()
 	// Choose the field the user wants to update
 	printf("Please select the field you want to update:\n1 - Name\n2 - Price\n3 - Quantity\n");
 	scanf(" %s", choice1);
+	if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+	{
+		fclose(fic);
+		return manager_menu();
+	}
+	if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+	{
+		fclose(fic);
+		return menu_updating_product();
+	}
 	while (choice1 < '0' && choice1>'3')
 	{
+		Color(4, 0);
 		printf("Your choice is not good. Try again.\n");
+		Color(15, 0);
 		getchar();
 		scanf("%c", &choice1);
+		if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+		{
+			fclose(fic);
+			return menu_updating_product();
+		}
 	}
 	// Update the name of product
 	if (atoi(choice1) == 1)
@@ -1550,7 +1872,9 @@ void choose_product_to_update()
 		scanf("%[^\n]", product_nameNew);
 		while (capital_letters_check(product_nameNew) == 1)
 		{
+			Color(4, 0);
 			printf("Your product name is not valid, Please try again: ");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", product_nameNew);
 		}
@@ -1564,7 +1888,9 @@ void choose_product_to_update()
 		scanf(" %[^\n]", price);
 		while (check_price(price) == 1)
 		{
+			Color(4, 0);
 			printf("Your product price is not valid, Please try again :");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", price);
 		}
@@ -1578,7 +1904,9 @@ void choose_product_to_update()
 		scanf(" %[^\n]", amount_of_product);
 		while (check_number(amount_of_product) == 1)
 		{
+			Color(4, 0);
 			printf("Your product quantity is not valid, Please try again");
+			Color(15, 0);
 			getchar();
 			scanf(" %[^\n]", amount_of_product);
 		}
@@ -1615,7 +1943,9 @@ void choose_product_to_update()
 	}
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("Product successfully updated\n");
+	Color(15, 0);
 	return manager_menu();
 }
 
@@ -1631,6 +1961,7 @@ void manager_profile()
 	char c = fgetc(fic);
 	manager new_data;
 	char age[4];
+	int test = 0;
 
 	while (c != '\n')
 	{
@@ -1638,26 +1969,31 @@ void manager_profile()
 		c = fgetc(fic);
 	}
 	fputc(c, fic2);
-
 	while (!feof(fic))
 	{
 		fscanf(fic, "%[^,],%[^,],%[^,],%[^,],%d,%[^\n]\n", data.last_name, data.first_name, data.user_name, data.phone, &data.age, data.password);
 		if (strcmp(current_user, data.user_name) == 0)
 		{
+			Color(9, 0);
 			printf("1 - Last Name: %s\n2 - First Name: %s\n3 - User Name: %s\n4 - Phone: %s\n5 - Age: %d\n6 - Password: %s\n\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.password);
-			printf("If you want to edit your information, please enter 0\n");
+			Color(10, 0);
+			printf("If you want to edit your information, please enter 0. Otherwise press any key\n");
+			Color(15, 0);
 			scanf(" %s", choice);
 			if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 			{
+				fclose(fic);
+				fclose(fic2);
 				return manager_menu();
 			}
-
-			if (atoi(choice) == 0)
+			if (strcmp(choice, "0") == 0)
 			{
 				printf("Which fild do you want to update?\n");
 				scanf(" %s", choice);
 				if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 				{
+					fclose(fic);
+					fclose(fic2);
 					return manager_menu();
 				}
 				if ((check_number(choice) == 0) && atoi(choice) <= 6 && atoi(choice) > 0)
@@ -1668,7 +2004,9 @@ void manager_profile()
 						scanf(" %s", new_data.last_name);
 						while (string_check(new_data.last_name) == 1)
 						{
+							Color(4, 0);
 							printf("Your last name is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.last_name);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s\n", new_data.last_name, data.first_name, data.user_name, data.phone, data.age, data.password);
@@ -1679,7 +2017,9 @@ void manager_profile()
 						scanf(" %s", new_data.first_name);
 						while (string_check(new_data.first_name) == 1)
 						{
+							Color(4, 0);
 							printf("Your last name is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.first_name);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s\n", data.last_name, new_data.first_name, data.user_name, data.phone, data.age, data.password);
@@ -1696,7 +2036,9 @@ void manager_profile()
 						scanf(" %s", new_data.phone);
 						while (check_phone(new_data.phone) == 1)
 						{
+							Color(4, 0);
 							printf("Your phone is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.phone);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s\n", data.last_name, data.first_name, data.user_name, new_data.phone, data.age, data.password);
@@ -1707,7 +2049,9 @@ void manager_profile()
 						scanf(" %s", age);
 						while (atoi(age) > 120 || atoi(age) < 25)
 						{
+							Color(4, 0);
 							printf("Your age is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", age);
 						}
 						new_data.age = atoi(age);
@@ -1719,7 +2063,9 @@ void manager_profile()
 						scanf(" %s", new_data.password);
 						while (check_password(new_data.password) == 1)
 						{
+							Color(4, 0);
 							printf("Your password is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.password);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, new_data.password);
@@ -1731,6 +2077,13 @@ void manager_profile()
 						c = fgetc(fic);
 					}
 					break;
+				}
+				else
+				{
+					Color(4, 0);
+					printf("Your choice is not valid.\n");
+					Color(15, 0);
+					test = 1;
 				}
 			}
 			else
@@ -1751,7 +2104,12 @@ void manager_profile()
 	}
 	fclose(fic2);
 	fclose(fic);
-	printf("Information successfully updated\n");
+	if (test == 0)
+	{
+		Color(10, 0);
+		printf("Information successfully updated\n");
+		Color(15, 0);
+	}
 	return manager_menu();
 }
 
@@ -1768,6 +2126,7 @@ void costumer_profile(char userName[25])
 	char choice[2];
 	char c = fgetc(fic);
 	char age[4];
+	int test = 0;
 
 	while (c != '\n')
 	{
@@ -1775,36 +2134,44 @@ void costumer_profile(char userName[25])
 		c = fgetc(fic);
 	}
 	fputc(c, fic2);
-
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		fscanf(fic, "%[^,],%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^\n]\n", data.last_name, data.first_name, data.user_name, data.phone, &data.age, data.city, data.adress, data.password);
-
-
-
 		if (strcmp(userName, data.user_name) == 0)
 		{
+			Color(9, 0);
 			printf("1 - Last Name: %s\n2 - First Name: %s\n3 - User Name: %s\n4 - Phone: %s\n5 - Age: %d\n6 - City: %s\n7 - Adress: %s\n8 - Password: %s\n\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password);
-			printf("If you want to edit your information, please enter 0\n");
+			Color(10, 0);
+			printf("If you want to edit your information, please enter 0. Otherwise press any key\n");
+			Color(15, 0);
 			scanf(" %s", choice);
 			if (strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 			{
+				fclose(fic); 
+				fclose(fic2);
 				return customer_menu();
 			}
 			if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
 			{
+				fclose(fic);
+				fclose(fic2);
 				return menu_customer_profile();
 			}
-			if (atoi(choice) == 0) //else////////////////////////////////////// 
+			if (atoi(choice) == 0)
 			{
 				printf("Which fild do you want to update?\n");
 				scanf(" %s", choice);
 				if (strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
 				{
+					fclose(fic);
+					fclose(fic2);
 					return customer_menu();
 				}
 				if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
 				{
+					fclose(fic);
+					fclose(fic2);
 					return menu_customer_profile();
 				}
 				if ((check_number(choice) == 0) && atoi(choice) <= 8 && atoi(choice) > 0)
@@ -1815,7 +2182,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.last_name);
 						while (string_check(new_data.last_name) == 1)
 						{
+							Color(4, 0);
 							printf("Your last name is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.last_name);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", new_data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password);
@@ -1826,7 +2195,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.first_name);
 						while (string_check(new_data.first_name) == 1)
 						{
+							Color(4, 0);
 							printf("Your last name is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.first_name);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, new_data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password);
@@ -1843,7 +2214,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.phone);
 						while (check_phone(new_data.phone) == 1)
 						{
+							Color(4, 0);
 							printf("Your phone is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.phone);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, data.user_name, new_data.phone, data.age, data.city, data.adress, data.password);
@@ -1854,7 +2227,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", age);
 						while (atoi(age) > 120 || atoi(age) < 25)
 						{
+							Color(4, 0);
 							printf("Your age is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", age);
 						}
 						new_data.age = atoi(age);
@@ -1866,7 +2241,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.city);
 						while (string_check(new_data.city) == 1)
 						{
+							Color(4, 0);
 							printf("The city is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.city);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, new_data.city, data.adress, data.password);
@@ -1877,7 +2254,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.adress);
 						while (check_adress(new_data.adress) == 1)
 						{
+							Color(4, 0);
 							printf("Your adress is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.adress);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, new_data.adress, data.password);
@@ -1888,7 +2267,9 @@ void costumer_profile(char userName[25])
 						scanf(" %s", new_data.password);
 						while (check_password(new_data.password) == 1)
 						{
+							Color(4, 0);
 							printf("Your password is not valid, Please try again!\n");
+							Color(15, 0);
 							scanf(" %s", new_data.password);
 						}
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, new_data.password);
@@ -1901,12 +2282,20 @@ void costumer_profile(char userName[25])
 					}
 					break;
 				}
+								else
+				{
+				Color(4, 0);
+				printf("Your choice is not valid.\n");
+				Color(15, 0);
+				test = 1;
+				}
 			}
 			else
 				return customer_menu();
 		}
 		fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password);
 	}
+	Color(15, 0);
 	fclose(fic);
 	fic = fopen("CustomersInformation.csv", "w");
 	fclose(fic);
@@ -1920,7 +2309,12 @@ void costumer_profile(char userName[25])
 	}
 	fclose(fic2);
 	fclose(fic);
-	printf("Information successfully updated\n");
+	if (test == 0)
+	{
+		Color(10, 0);
+		printf("Information successfully updated\n");
+		Color(15, 0);
+	}
 	return customer_menu();
 }
 
@@ -1944,8 +2338,18 @@ void manager_menu()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 7 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return menu();
+		}
+		if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0)
+		{
+			exit(1);
+		}
 	}
 	if (atoi(choice) == 1)
 	{
@@ -1993,8 +2397,14 @@ void menu_add_category_product()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 	{
@@ -2011,8 +2421,14 @@ void menu_add_category_product()
 		}
 		while ((check_number(choiceC) == 1) || atoi(choiceC) > num_category || atoi(choiceC) < 1)
 		{
+			Color(4, 0);
 			printf("The input is invalid, Try again\n");
+			Color(15, 0);
 			scanf(" %s", choiceC);
+			if (strcmp(choiceC, "R") == 0 || strcmp(choiceC, "r") == 0 || strcmp(choiceC, "H") == 0 || strcmp(choiceC, "h") == 0)
+			{
+				return manager_menu();
+			}
 		}
 		return add_product(choiceC);
 	}
@@ -2034,11 +2450,24 @@ void menu_delete()
 	}
 	while ((check_number(choice1) == 1) || atoi(choice1) > num_category || atoi(choice1) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice1);
+		if (strcmp(choice1, "R") == 0 || strcmp(choice1, "r") == 0 || strcmp(choice1, "H") == 0 || strcmp(choice1, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	num_product = view_specific_category(atoi(choice1));
-	printf("Select the prioduct you want to delete:\n");
+	if (num_product == 0)
+	{
+		Color(4, 0);
+		printf("They are no products in this category.\n");
+		Color(15, 0);
+		return manager_menu();
+	}
+	printf("Select the product you want to delete:\n");
 	scanf(" %s", choice2);
 	if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
 	{
@@ -2046,8 +2475,14 @@ void menu_delete()
 	}
 	while ((check_number(choice2) == 1) || atoi(choice2) > num_product || atoi(choice2) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice2);
+		if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	return delete_product(choice1, choice2);
 }
@@ -2064,8 +2499,14 @@ void menu_order_status()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 4 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 		return print_approved_orders();
@@ -2088,8 +2529,14 @@ void menu_view_orders_manager()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 3 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 		return search_order_by_number();
@@ -2116,8 +2563,14 @@ void menu_view_stock()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 3 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 		return view_all_stock();
@@ -2132,8 +2585,14 @@ void menu_view_stock()
 		}
 		while ((check_number(choice_cat) == 1) || atoi(choice_cat) > num_category || atoi(choice_cat) < 1)
 		{
+			Color(4, 0);
 			printf("The input is invalid, Try again\n");
+			Color(15, 0);
 			scanf(" %s", choice_cat);
+			if (strcmp(choice_cat, "R") == 0 || strcmp(choice_cat, "r") == 0 || strcmp(choice_cat, "H") == 0 || strcmp(choice_cat, "h") == 0)
+			{
+				return manager_menu();
+			}
 		}
 		num_category = view_specific_category(atoi(choice_cat));
 		return manager_menu();
@@ -2148,15 +2607,37 @@ void menu_view_stock()
 		product data;
 		printf("\nPlease enter the name of the product you want to update (only with capital letters): ");
 		scanf(" %[^\n]", product_name);
+		if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+		{
+			fclose(fic);
+			return manager_menu();
+		}
+		if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+		{
+			fclose(fic);
+			return menu_view_stock();
+		}
 		while (capital_letters_check(product_name) == 1)
 		{
+			Color(4, 0);
 			printf("Your product name is not valid, Please try again: ");
+			Color(15, 0);
 			scanf(" %[^\n]", product_name);
+			if (strcmp(product_name, "H") == 0 || strcmp(product_name, "h") == 0)
+			{
+				fclose(fic);
+				return manager_menu();
+			}
+			if (strcmp(product_name, "R") == 0 || strcmp(product_name, "r") == 0)
+			{
+				fclose(fic);
+				return menu_view_stock();
+			}
 		}
-		fseek(fic, 21, SEEK_SET);
+		fseek(fic, 20, SEEK_SET);
 		while (!feof(fic))
 		{
-			while (c != ',')
+			while (c != ',' && c != EOF)
 			{
 				c = fgetc(fic);
 			}
@@ -2177,7 +2658,9 @@ void menu_view_stock()
 		}
 		if (strcmp(data.product_name, product_name) != 0)
 		{
-			printf("\nThe searched product has not been found.");
+			Color(4, 0);
+			printf("\nThe searched product has not been found.\n");
+			Color(15, 0);
 			return manager_menu();
 		}
 		return view_specific_product(product_name);
@@ -2196,8 +2679,14 @@ void menu_updating_product()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return manager_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 		return update_product_by_search();
@@ -2237,8 +2726,10 @@ void customer_menu()
 		scanf(" %s", product);
 		while (capital_letters_check(product) == 1)
 		{
-			scanf(" %s", product);
+			Color(4, 0);
 			printf("Your product name is not valid, Please try again\n");
+			Color(15, 0);
+			scanf(" %s", product);
 		}
 		return search_product_customer(product);
 	}
@@ -2253,11 +2744,18 @@ void customer_menu()
 	else if (atoi(choice) > 0 || atoi(choice) <= num_category)
 	{
 		num_product = some_category_costumer(atoi(choice));
+		if (num_product == 0)
+		{
+			Color(4, 0);
+			printf("Where are sorry,no products in this category are available\n");
+			Color(15, 0);
+			return customer_menu();
+		}
 		printf("Select the product you want to add to your basket:\nIf you want to sort them by increasing order enter A, or by in descending order enter D.\n");
 		scanf(" %s", choice2);
 		if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
 		{
-			return menu();
+			return customer_menu();
 		}
 		if (strcmp(choice2, "A") == 0 || strcmp(choice2, "a") == 0)
 		{
@@ -2269,21 +2767,33 @@ void customer_menu()
 			sort_D(choice);
 			return customer_menu();
 		}
-		else if (atoi(choice2) > 0 || atoi(choice2) <= num_category)
+		else if (check_number(choice2)==0&&(atoi(choice2) > 0 && atoi(choice2) <= num_category))
 		{
 			printf("What is the quantity you want?\n");
 			scanf(" %s", quantity);
+			if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+			{
+				return customer_menu();
+			}
 			while (check_number(quantity) == 1)
 			{
+				Color(4, 0);
 				printf("Your input is not valid, Try again.\n");
+				Color(15, 0);
 				scanf(" %s", quantity);
+				if (strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0 || strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0)
+				{
+					return customer_menu();
+				}
 			}
 			add_product_to_basket_from_menu(choice, choice2, quantity);
 			return customer_menu();
 		}
 		else
 		{
+			Color(4, 0);
 			printf("Your choice is wrong!\n");
+			Color(15, 0);
 			return customer_menu();
 		}
 
@@ -2326,17 +2836,30 @@ void search_product_customer(char productT[25])
 	}
 	if (strcmp(data.product_name, productT) != 0)
 	{
+		Color(4, 0);
 		printf("\nOops! Looks like we could'nt find this product.\n");
-		//printf("\nThe searched product has not been found.");
+		Color(15, 0);
 		return customer_menu();
 	}
+	Color(9, 0);
 	printf("Name: %s\nPrice: %s\n", data.product_name, data.price);
+	Color(15, 0);
 	printf("To add the product to the basket enter the amount you want.\n");
 	scanf(" %s", amount_of_product);
+	if (strcmp(amount_of_product, "R") == 0 || strcmp(amount_of_product, "r") == 0 || strcmp(amount_of_product, "H") == 0 || strcmp(amount_of_product, "h") == 0)
+	{
+		return customer_menu();
+	}
 	while (check_number(amount_of_product) == 1 || atoi(amount_of_product) > atoi(data.amount_of_product))
 	{
+		Color(4, 0);
 		printf("\nThe amount is not valid.\nthere is just %s in the stock\n", data.amount_of_product);
+		Color(15, 0);
 		scanf(" %s", amount_of_product);
+		if (strcmp(amount_of_product, "R") == 0 || strcmp(amount_of_product, "r") == 0 || strcmp(amount_of_product, "H") == 0 || strcmp(amount_of_product, "h") == 0)
+		{
+			return customer_menu();
+		}
 	}
 	FILE* fic2 = fopen("Basket.csv", "r+");
 	if (fic2 == NULL)
@@ -2345,7 +2868,9 @@ void search_product_customer(char productT[25])
 	fprintf(fic2, "\n%s,%s,%s;", data.product_name, amount_of_product, data.price);
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("The product has been added successfully\n");
+	Color(15, 0);
 	return customer_menu();
 }
 
@@ -2361,8 +2886,14 @@ void menu_customer_profile()
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 2 || atoi(choice) < 1)
 	{
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return customer_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 		return print_previous_order_costumer();
@@ -2381,6 +2912,7 @@ void print_previous_order_costumer()
 	int amount, total, i, counter = 1;
 	char c = ' ';
 	fseek(fic, 59, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		c = ' ';
@@ -2401,8 +2933,13 @@ void print_previous_order_costumer()
 		while (c != '\n' && c != EOF)
 			c = fgetc(fic);
 	}
+	Color(15, 0);
 	if (counter != -1)
+	{
+		Color(4, 0);
 		printf("\n You dont have any orders yet.\n");
+		Color(15, 0);
+	}
 	fclose(fic);
 	return customer_menu();
 }
@@ -2426,14 +2963,22 @@ void menu_view_basket()
 	{
 		if (atoi(choice) == 1 || strcmp(choice, "B") == 0 || strcmp(choice, "b") == 0 || strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0)
 			break;
+		Color(4, 0);
 		printf("The input is invalid, Try again\n");
+		Color(15, 0);
 		scanf(" %s", choice);
+		if (strcmp(choice, "R") == 0 || strcmp(choice, "r") == 0 || strcmp(choice, "H") == 0 || strcmp(choice, "h") == 0)
+		{
+			return customer_menu();
+		}
 	}
 	if (atoi(choice) == 1)
 	{
 		if (num_of_product == 0)
 		{
+			Color(4, 0);
 			printf("\nYou can't update your basket because it is empty.\n");
+			Color(15, 0);
 			return menu_view_basket();
 		}
 		printf("Select the number of the product you want to update: \n");
@@ -2444,8 +2989,14 @@ void menu_view_basket()
 		}
 		while (check_number(product_choice) == 1 || atoi(product_choice) > num_of_product || atoi(product_choice) < 1)
 		{
+			Color(4, 0);
 			printf("The input is invalid, Try again\n");
+			Color(15, 0);
 			scanf(" %s", product_choice);
+			if (strcmp(product_choice, "R") == 0 || strcmp(product_choice, "r") == 0 || strcmp(product_choice, "H") == 0 || strcmp(product_choice, "h") == 0)
+			{
+				return customer_menu();
+			}
 		}
 		return edit_customer_basket(atoi(product_choice),num_of_product);
 	}
@@ -2453,7 +3004,9 @@ void menu_view_basket()
 	{
 		if (num_of_product == 0)
 		{
+			Color(4, 0);
 			printf("\nYou can't buy your basket because it is empty.\n");
+			Color(15, 0);
 			return menu_view_basket();
 		}
 		return payment(num_of_product);
@@ -2476,13 +3029,16 @@ int print_customer_basket()
 	int sum = 0;
 	char c = ' ';
 	fseek(fic, 3, SEEK_SET);
+	Color(9, 0);
 	while (!feof(fic))
 	{
 		++num_product;
 		fscanf(fic, "%[^,],%[^,],%[^;];", product_name, quantity, price);                           // maybe \n?
 		if (check_number(quantity) == 1)
 		{
+			Color(4, 0);
 			printf("\nThey are no product in your basket.\n\n");
+			Color(15, 0);
 			break;
 		}
 		sum += (atoi(price) * atoi(quantity));
@@ -2491,6 +3047,7 @@ int print_customer_basket()
 		if (c == EOF)
 			break;
 	}
+	Color(15, 0);
 	if (check_number(quantity) == 1)
 	{
 		fclose(fic);
@@ -2547,8 +3104,18 @@ void edit_customer_basket(int choice,int numofproduct)
 	}
 	while (check_number(quantity) == 1)
 	{
+		Color(4, 0);
 		printf("Your input is not valid, Try again.\n");
+		Color(15, 0);
 		scanf(" %s", quantity);
+		if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0)
+		{
+			return customer_menu();
+		}
+		if (strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+		{
+			return menu_view_basket();
+		}
 	}
 	if (atoi(quantity) == 0)
 	{
@@ -2581,7 +3148,9 @@ void edit_customer_basket(int choice,int numofproduct)
 	}
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("Quantity successfully updated\n\n\n");
+	Color(15, 0);
 	return menu_view_basket();
 }
 
@@ -2598,14 +3167,16 @@ void payment(int numofproduct)
 
 	char day[2];
 	char time[2];
-	printf("Enter your payment details:\nCredit card number (16 digits):\n");
+	printf("Enter your payment details:\nCredit card number (Please entrer four digits four times):\n");
 	scanf(" %s", credit_card1);
 	scanf(" %s", credit_card2);
 	scanf(" %s", credit_card3);
 	scanf(" %s", credit_card4);
 	while (check_number(credit_card1) == 1 || check_number(credit_card2) == 1 || check_number(credit_card3) == 1 || check_number(credit_card4) == 1)
 	{
+		Color(4, 0);
 		printf("Your credit card number is not valid, Try again.\n");
+		Color(15, 0);
 		scanf(" %s", credit_card1);
 		scanf(" %s", credit_card2);
 		scanf(" %s", credit_card3);
@@ -2616,28 +3187,36 @@ void payment(int numofproduct)
 	scanf(" %s", month);
 	while (check_number(month) == 1 || atoi(month) > 12 || atoi(month) < 1)
 	{
+		Color(4, 0);
 		printf("The month you entered is not valid, Try again.\n");
+		Color(15, 0);
 		scanf(" %s", month);
 	}
 	printf("Enter year (more than 2021): \n");
 	scanf(" %s", year);
 	while (check_number(year) == 1 || atoi(year) <= 2021)
 	{
+		Color(4, 0);
 		printf("The year you entered is not valid, Try again.\n");
+		Color(15, 0);
 		scanf(" %s", year);
 	}
 	printf("Enter ID (9): \n");
 	scanf(" %s", id);
 	while (check_ID(id) == 1)
 	{
+		Color(4, 0);
 		printf("Your ID number is not correct, Try again.\n");
+		Color(15, 0);
 		scanf(" %s", id);
 	}
 	printf("Enter CVV (3 digits in the back of the card): \n");
 	scanf(" %s", cvv);
 	while (check_number(cvv) == 1 || atoi(cvv) == 0)
 	{
+		Color(4, 0);
 		printf("Your CVV is not correct, try again.\n");
+		Color(15, 0);
 		scanf(" %s", cvv);
 	}
 	///////////////////////////////////////////// reduce from stock
@@ -2646,18 +3225,23 @@ void payment(int numofproduct)
 	scanf(" %s", day);
 	while (check_number(day) == 1 || atoi(day) > 5 || atoi(day) < 1)
 	{
+		Color(4, 0);
 		printf("Your choice is not correct, try again.\n");
+		Color(15, 0);
 		scanf(" %s", day);
 	}
 	printf("Choose the time:\n1 - 9:00 - 12:00\n2 - 12:00 - 15:00\n3 - 15:00 - 18:00\n");
 	scanf(" %s", time);
 	while (check_number(time) == 1 || atoi(time) > 3 || atoi(time) < 1)
 	{
+		Color(4, 0);
 		printf("Your choice is not correct, try again.\n");
+		Color(15, 0);
 		scanf(" %s", time);
 	}
-
-	printf("Your order is on the way to you, Come shop with us again!\n");
+	Color(10, 0);
+	printf("\n\nYour order is on the way to you, Come shop with us again!\n\n\n\n");
+	Color(15, 0);
 
 	stock_update();
 
@@ -2734,7 +3318,9 @@ void add_product_to_basket_from_menu(char choicecat[5], char choicepro[5], char 
 	fscanf(fic, "%[^;];%[^;];%[^;];", data.product_name, data.price, data.amount_of_product);
 	if (atoi(quantity) > atoi(data.amount_of_product))
 	{
+		Color(4, 0);
 		printf("Your input is not valid, remain %s of %s in the stock. Try again.\n", data.amount_of_product,data.product_name);
+		Color(15, 0);
 		return;
 	}
 	else
@@ -2745,7 +3331,9 @@ void add_product_to_basket_from_menu(char choicecat[5], char choicepro[5], char 
 
 	fclose(fic2);
 	fclose(fic);
+	Color(10, 0);
 	printf("\nThe product has been added successfully\n");
+	Color(15, 0);
 	return;
 }
 
@@ -2753,22 +3341,30 @@ int struct_cmp_by_increasing_order(const void* a, const void* b)
 {
 	product* ia = (struct product*)a;
 	product* ib = (struct product*)b;
-	return strcmp(ia->price, ib->price);
+	if (atoi(ia->price) > atoi(ib->price))
+		return 1;
+	else
+		return -1;
 }
 
 int struct_cmp_by_descending_order(const void* a, const void* b)
 {
 	product* ia = (struct product*)a;
 	product* ib = (struct product*)b;
-	return -1 * strcmp(ia->price, ib->price);
+	if (atoi(ia->price) > atoi(ib->price))
+		return -1;
+	else
+		return 1;
 }
 
 void print_struct_array(struct product* array, int len)
 {
 	int counter = 1;
 	printf("\n");
+	Color(9, 0);
 	for (int i = 0; i < len; i++)
 		printf("%d - %s\nPRICE: %s ILS\n\n", counter++, array[i].product_name, array[i].price);
+	Color(15, 0);
 }
 
 void sort_A(char category[5])
@@ -2824,23 +3420,39 @@ void sort_A(char category[5])
 
 	printf("Select the product you want to add to your basket :\n");
 	scanf(" %s", choice2);
+	if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0 || strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+	{
+		return;
+	}
 	if (atoi(choice2) > 0 || atoi(choice2) <= atoi(category))
-	{ ///////////////////////////////////////////////////////check stock
+	{ 
 		printf("What is the quantity you want? \n");
 		scanf(" %s", quantity);
+		if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0|| strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+		{
+			return;
+		}
 		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 > atoi(test->amount_of_product))
 		{
-			printf("Your input is not valid, Try again.\n"); 
+			Color(4, 0);
+			printf("Your input is not valid, Try again.\n");
+			Color(15, 0);
 			scanf(" %s", quantity);
+			if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0 || strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+			{
+				return;
+			}
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
 		fseek(fic2, 0, SEEK_END);
-		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
+		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name,quantity, test[atoi(choice2) - 1].price);
 		fclose(fic2);
 		fclose(fic);
+		Color(10, 0);
 		printf("\nThe product has been added successfully\n");
+		Color(15, 0);
 	}
-	return;/////////////////
+	return;
 }
 
 void sort_D(char category[5])
@@ -2895,21 +3507,37 @@ void sort_D(char category[5])
 
 	printf("Select the product you want to add to your basket :\n");
 	scanf(" %s", choice2);
+	if (strcmp(choice2, "H") == 0 || strcmp(choice2, "h") == 0 || strcmp(choice2, "R") == 0 || strcmp(choice2, "r") == 0)
+	{
+		return;
+	}
 	if (atoi(choice2) > 0 || atoi(choice2) <= atoi(category))
-	{ ///////////////////////////////////////////////////////check stock//////////////////////////////////////
+	{ 
 		printf("What is the quantity you want? \n");
 		scanf(" %s", quantity);
+		if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0 || strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+		{
+			return;
+		}
 		while (check_number(quantity) == 1 || atoi(quantity) > atoi(test->amount_of_product) || 0 > atoi(test->amount_of_product))
 		{
+			Color(4, 0);
 			printf("Your input is not valid, Try again.\n");
+			Color(15, 0);
 			scanf(" %s", quantity);
+			if (strcmp(quantity, "H") == 0 || strcmp(quantity, "h") == 0 || strcmp(quantity, "R") == 0 || strcmp(quantity, "r") == 0)
+			{
+				return;
+			}
 		}
 		FILE* fic2 = fopen("Basket.csv", "r+");
 		fseek(fic2, 0, SEEK_END);
-		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name, test[atoi(choice2) - 1].amount_of_product, test[atoi(choice2) - 1].price);
+		fprintf(fic2, "\n%s,%s,%s;", test[atoi(choice2) - 1].product_name, quantity, test[atoi(choice2) - 1].price);
 		fclose(fic2);
 		fclose(fic);
+		Color(10, 0);
 		printf("\nThe product has been added successfully\n");
+		Color(15, 0);
 	}
 	return;
 }
@@ -2939,9 +3567,9 @@ int some_category_costumer(int choice)
 				break;
 		}
 	}
-	while (c != ',')
+	while (c != ','&&c!=EOF)
 		c = fgetc(fic);
-	//printf("\n    PRODUCT:    PRICE:\n\n");
+	Color(9, 0);
 	while (!feof(fic) && c != '\n')
 	{
 		++serial_num;
@@ -2951,11 +3579,11 @@ int some_category_costumer(int choice)
 		c = fgetc(fic);
 		c = fgetc(fic);
 	}
+	Color(15, 0);
 	fclose(fic);
 	return serial_num;
 }
-
-   
+ 
 void stock_update(){
 	FILE* fic = fopen("Basket.csv", "r+");
 	if (fic == NULL)
@@ -3014,7 +3642,9 @@ void update_in_stock(char product_name[25],char quantity[5],int i)
 					fprintf(fic2, "%s;%s;%d;", data.product_name, data.price, test);
 				else
 				{
+					Color(4, 0);
 					printf("\nWe are sorry, due to an error we will only be able to deliver %s %s to you instead of %s (from the product number %d).\n\n", data.amount_of_product, data.product_name, quantity,i+1);
+					Color(15, 0);
 					fprintf(fic2, "%s;%s;%d;", data.product_name, data.price, 0);
 				}
 			}

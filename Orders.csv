@@ -2,6 +2,7 @@ Number of the order,Status,Customer,Amount,Total,Products
 1,V,ZACCH,2,800,BANANA x 5 => 12;,CHOKO x 7 => 12;
 2,X,SHANI,1,345,CAF x 9 => 12;
 3,-,ILAN,1,63,LAIT x 10 => 12;
-3,-,AZERTY,2,35,MILK x 1 => 30;,BUN x 1 => 5;
-4,-,AZERTY,1,30,MILK x 1 => 30;
-5,-,AZERTY,2,210,BUN x 2 => 5;,SHOCKO x 2 => 100;
+4,-,AZERTY,2,35,MILK x 1 => 30;,BUN x 1 => 5;
+5,-,AZERTY,1,30,MILK x 1 => 30;
+6,V,AZERTY,2,210,BUN x 2 => 5;,SHOCKO x 2 => 100;
+6,-,AZERTY,3,441,MILK x 4 => 30;,SHOCKO x 3 => 100;,BUTTER x 3 => 7;
