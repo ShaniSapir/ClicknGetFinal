@@ -170,7 +170,7 @@ void menu()
 			if (register_manager() == 0)
 			{
 				Color(4, 0);
-				printf("Please note, you hasn't been registered.\n");
+				printf("Please note, you haven't been registered.\n");
 				Color(15, 0);
 			}
 			return menu();
@@ -194,7 +194,7 @@ void menu()
 			if (register_customer() == 0)
 			{
 				Color(4, 0);
-				printf("Please note, you hasn't been registered.\n");
+				printf("Please note, you haven't been registered.\n");
 				Color(15, 0);
 			}
 			return menu();
@@ -214,19 +214,19 @@ int register_manager()
 	do
 	{
 		printf("\n\nLast name (without characters): ");
-		scanf("%s", data.last_name);
+		scanf(" %s", data.last_name);
 		printf("First name (without characters): ");
-		scanf("%s", data.first_name);
+		scanf(" %s", data.first_name);
 		printf("User name: ");
-		scanf("%s", data.user_name);
+		scanf( "%s", data.user_name);
 		printf("Phone number (must start with 05): ");
-		scanf("%s", data.phone);
+		scanf(" %s", data.phone);
 		printf("Age (must be under 120): ");
 		scanf_s("%d", &data.age);
 		printf("Password (must include one capital letter and minimum 6 characters): ");
-		scanf("%s", data.password);
+		scanf(" %s", data.password);
 		printf("Write again your password: ");
-		scanf("%s", cpassword);
+		scanf(" %s", cpassword);
 	} while (checkm(data.last_name, data.first_name, data.user_name, data.phone, data.age, data.password, cpassword) == 0);
 
 	if (termofuse() == 0)
@@ -249,13 +249,13 @@ int register_customer()
 	do
 	{
 		printf("\n\nLast name (without characters): ");
-		scanf("%s", data.last_name);
+		scanf(" %s", data.last_name);
 		printf("First name (without characters): ");
-		scanf("%s", data.first_name);
+		scanf(" %s", data.first_name);
 		printf("User name: ");
-		scanf("%s", data.user_name);
+		scanf(" %s", data.user_name);
 		printf("Phone number (must start with 05): ");
-		scanf("%s", data.phone);
+		scanf(" %s", data.phone);
 		printf("Age (must be under 120): ");
 		scanf_s("%d", &data.age);
 		printf("City (without characters): ");
@@ -263,9 +263,9 @@ int register_customer()
 		printf("Adress (without characters and one number): ");
 		scanf(" %[^\n]", data.adress);
 		printf("Password (must include one capital letter and minimum 6 characters): ");
-		scanf("%s", data.password);
+		scanf( "%s", data.password);
 		printf("Write again your password: ");
-		scanf("%s", cpassword);
+		scanf(" %s", cpassword);
 	} while (checkc(data.last_name, data.first_name, data.user_name, data.phone, data.age, data.city, data.adress, data.password, cpassword) == 0);
 
 	if (termofuse() == 0)
@@ -409,7 +409,7 @@ int checkc(char last[25], char first[25], char user[25], char phone[11], int age
 	if (number == 0)
 	{
 		Color(4, 0);
-		printf("\nYour age is not correct. Please try again.\n");
+		printf("\nYour adress is not correct. Please try again.\n");
 		Color(15, 0);
 		return 0;
 	}
@@ -2158,7 +2158,7 @@ void costumer_profile(char userName[25])
 				fclose(fic2);
 				return menu_customer_profile();
 			}
-			if (atoi(choice) == 0)
+			if (strcmp(choice, "0") == 0)
 			{
 				printf("Which fild do you want to update?\n");
 				scanf(" %s", choice);
@@ -2722,7 +2722,7 @@ void customer_menu()
 	}
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
-		printf("Enter name of product you want to add to your basket (	Capital letter only):\n");
+		printf("Enter name of product you want to add to your basket (Capital letter only):\n");
 		scanf(" %s", product);
 		while (capital_letters_check(product) == 1)
 		{
@@ -2841,6 +2841,13 @@ void search_product_customer(char productT[25])
 		Color(15, 0);
 		return customer_menu();
 	}
+	if (strcmp(data.amount_of_product, "0") == 0)
+	{
+		Color(4, 0);
+		printf("\nWe are sorry, the desired product is no longer in stock.\n");
+		Color(15, 0);
+		return customer_menu();
+	}
 	Color(9, 0);
 	printf("Name: %s\nPrice: %s\n", data.product_name, data.price);
 	Color(15, 0);
@@ -2853,7 +2860,7 @@ void search_product_customer(char productT[25])
 	while (check_number(amount_of_product) == 1 || atoi(amount_of_product) > atoi(data.amount_of_product))
 	{
 		Color(4, 0);
-		printf("\nThe amount is not valid.\nthere is just %s in the stock\n", data.amount_of_product);
+		printf("\nThe amount is not valid. There is just %s in the stock\n", data.amount_of_product);
 		Color(15, 0);
 		scanf(" %s", amount_of_product);
 		if (strcmp(amount_of_product, "R") == 0 || strcmp(amount_of_product, "r") == 0 || strcmp(amount_of_product, "H") == 0 || strcmp(amount_of_product, "h") == 0)
@@ -3053,7 +3060,9 @@ int print_customer_basket()
 		fclose(fic);
 		return 0;
 	}
+	Color(10, 0);
 	printf("Total of basket: %d\n", sum);
+	Color(15, 0);
 	fclose(fic);
 	return num_product;
 }
@@ -3156,10 +3165,10 @@ void edit_customer_basket(int choice,int numofproduct)
 
 void payment(int numofproduct)
 {
-	char credit_card1[4];
-	char credit_card2[4];
-	char credit_card3[4];
-	char credit_card4[4];
+	char credit_card1[5];
+	char credit_card2[5];
+	char credit_card3[5];
+	char credit_card4[5];
 	char month[3];
 	char year[5];
 	char id[10];
@@ -3172,7 +3181,7 @@ void payment(int numofproduct)
 	scanf(" %s", credit_card2);
 	scanf(" %s", credit_card3);
 	scanf(" %s", credit_card4);
-	while (check_number(credit_card1) == 1 || check_number(credit_card2) == 1 || check_number(credit_card3) == 1 || check_number(credit_card4) == 1)
+	while (check_number(credit_card1) == 1 || check_number(credit_card2) == 1 || check_number(credit_card3) == 1 || check_number(credit_card4) == 1||strlen(credit_card1)!=4 || strlen(credit_card2) != 4 || strlen(credit_card3) != 4 || strlen(credit_card4) != 4)
 	{
 		Color(4, 0);
 		printf("Your credit card number is not valid, Try again.\n");
@@ -3201,7 +3210,7 @@ void payment(int numofproduct)
 		Color(15, 0);
 		scanf(" %s", year);
 	}
-	printf("Enter ID (9): \n");
+	printf("Enter ID (9 numbers): \n");
 	scanf(" %s", id);
 	while (check_ID(id) == 1)
 	{
@@ -3251,7 +3260,7 @@ void payment(int numofproduct)
 		exit(1);
 	if (fic2 == NULL)
 		exit(1);
-	int counter = 0,sum=0;
+	int counter = 1,sum=0;
 	char product_name[25];
 	char quantity[5];
 	char price[10];
