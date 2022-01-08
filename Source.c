@@ -1771,9 +1771,6 @@ void choose_product_to_update()
 	serial_num = view_specific_category(atoi(choice1));
 	if (serial_num == 0)
 	{
-		Color(4, 0);
-		printf("They are no products in this category.\n");
-		Color(15, 0);
 		return manager_menu();
 	}
 	scanf(" %s", &choice2);
@@ -2029,6 +2026,7 @@ void manager_profile()
 						printf("Enter the updated user name:\n");
 						scanf(" %s", new_data.user_name);
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s\n", data.last_name, data.first_name, new_data.user_name, data.phone, data.age, data.password);
+						strcpy(current_user, new_data.user_name);
 					}
 					else if (atoi(choice) == 4)
 					{
@@ -2207,6 +2205,7 @@ void costumer_profile(char userName[25])
 						printf("Enter the updated user name:\n");
 						scanf(" %s", new_data.user_name);
 						fprintf(fic2, "%s,%s,%s,%s,%d,%s,%s,%s\n", data.last_name, data.first_name, new_data.user_name, data.phone, data.age, data.city, data.adress, data.password);
+						strcpy(current_user, new_data.user_name);
 					}
 					else if (atoi(choice) == 4)
 					{
@@ -2334,7 +2333,7 @@ void manager_menu()
 	}
 	if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0 )
 	{
-		exit(1);
+		menu();
 	}
 	while ((check_number(choice) == 1) || atoi(choice) > 7 || atoi(choice) < 1)
 	{
@@ -2348,7 +2347,7 @@ void manager_menu()
 		}
 		if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0)
 		{
-			exit(1);
+			menu();
 		}
 	}
 	if (atoi(choice) == 1)
@@ -2462,9 +2461,6 @@ void menu_delete()
 	num_product = view_specific_category(atoi(choice1));
 	if (num_product == 0)
 	{
-		Color(4, 0);
-		printf("They are no products in this category.\n");
-		Color(15, 0);
 		return manager_menu();
 	}
 	printf("Select the product you want to delete:\n");
@@ -2718,7 +2714,7 @@ void customer_menu()
 	}
 	if (strcmp(choice, "L") == 0 || strcmp(choice, "l") == 0)
 	{
-		exit(1);
+		menu();
 	}
 	if (strcmp(choice, "S") == 0 || strcmp(choice, "s") == 0)
 	{
@@ -2747,7 +2743,7 @@ void customer_menu()
 		if (num_product == 0)
 		{
 			Color(4, 0);
-			printf("Where are sorry,no products in this category are available\n");
+			printf("Where are sorry, they are no products in this category are available\n");
 			Color(15, 0);
 			return customer_menu();
 		}
@@ -2815,7 +2811,7 @@ void search_product_customer(char productT[25])
 	char c = fgetc(fic), d = ' ';
 	while (!feof(fic))
 	{
-		while (c != ',')
+		while (c != ',' && c != EOF)
 		{
 			c = fgetc(fic);
 		}
